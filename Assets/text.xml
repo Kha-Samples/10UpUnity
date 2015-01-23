@@ -1,0 +1,21 @@
+<!-- 
+	The DefaultLanguage tag specifies the 
+	fallback language of this file.
+	All keys that don't have an other language will
+	use the default language instead.
+	I.e. the original language of this file
+-->
+<DefaultLanguage>de</DefaultLanguage>
+
+<Mechanic>
+	<de>Ms. M</de>
+	<en>Ms. M</en>
+</Mechanic>
+<Professor>
+	<de>Professor</de>
+	<en>Professor</en>
+</Professor>
+<Fischmensch>
+	<de>Blupp der Grausame</de>
+	<en>Blupp the Cruel</en>
+</Fischmensch>

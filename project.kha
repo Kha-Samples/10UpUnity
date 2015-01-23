@@ -1,17 +1,302 @@
 {
 	"format": 1,
-	"game":
-	{
-		"name": "Empty",
-		"width": 640,
-		"height": 480
+	"game": {
+		"name": "10Up: Unity",
+		"width": 1024,
+		"height": 768
 	},
-	"assets":
-	[
-
+	"assets": [
+		{
+			"id": "a7a42c00-d7cc-11e1-9b23-0800200c9a66",
+			"type": "image",
+			"file": "glass.png",
+			"name": "glass",
+			"scale": 2,
+			"circle": false
+		},
+		{
+			"id": "2348bd72-d7ce-11e1-9b23-0800200c9a66",
+			"type": "image",
+			"file": "agent.png",
+			"name": "agent",
+			"scale": 2,
+			"background": {
+				"red": 255,
+				"green": 174,
+				"blue": 201
+			},
+			"circle": false
+		},
+		{
+			"id": "2348bd74-d7ce-11e1-9b23-0800200c9a66",
+			"type": "image",
+			"file": "outside.png",
+			"name": "outside",
+			"scale": 2,
+			"circle": false
+		},
+		{
+			"id": "2348bd76-d7ce-11e1-9b23-0800200c9a66",
+			"type": "sound",
+			"file": "hit",
+			"name": "hit",
+			"scale": 1,
+			"circle": false
+		},
+		{
+			"id": "5c950390-d7ce-11e1-9b23-0800200c9a66",
+			"type": "blob",
+			"file": "level1",
+			"name": "level1",
+			"scale": 1,
+			"circle": false
+		},
+		{
+			"id": "15b1ea20-4032-11e2-a25f-0800200c9a66",
+			"type": "blob",
+			"file": "arial34.kravur",
+			"name": "arial34.kravur",
+			"scale": 1,
+			"circle": false
+		},
+		{
+			"id": "04bf9738-4fe2-4966-8088-70ff042801ed",
+			"type": "image",
+			"file": "professor.png",
+			"name": "professor",
+			"scale": 2,
+			"background": {
+				"red": 255,
+				"green": 174,
+				"blue": 201
+			},
+			"circle": false
+		},
+		{
+			"id": "14c3245b-82c0-4693-a131-e6f255c872de",
+			"type": "image",
+			"file": "rowdy.png",
+			"name": "rowdy",
+			"scale": 2,
+			"background": {
+				"red": 255,
+				"green": 174,
+				"blue": 201
+			},
+			"circle": false
+		},
+		{
+			"id": "f00b98f6-70a7-4217-a6d6-a54965b634c9",
+			"type": "image",
+			"file": "mechanic.png",
+			"name": "mechanic",
+			"scale": 2,
+			"background": {
+				"red": 255,
+				"green": 174,
+				"blue": 201
+			},
+			"circle": false
+		},
+		{
+			"id": "66f588d6-998a-49d5-a7d6-e2a9a747be51",
+			"type": "image",
+			"file": "10up.png",
+			"name": "10up",
+			"scale": 1,
+			"circle": false
+		},
+		{
+			"id": "c659517f-66d8-4dcb-958a-cf727ccb6113",
+			"type": "image",
+			"file": "10up-logo.png",
+			"name": "10up-logo",
+			"scale": 1,
+			"circle": false
+		},
+		{
+			"id": "2a7ceaee-cc08-4ad2-80d5-7839b6f45f1a",
+			"type": "image",
+			"file": "fist.png",
+			"name": "fist",
+			"scale": 1,
+			"circle": false
+		},
+		{
+			"id": "1a57efc0-0d8c-11e3-8ffd-0800200c9a66",
+			"type": "image",
+			"file": "door.png",
+			"name": "door",
+			"scale": 2,
+			"background": {
+				"red": 255,
+				"green": 174,
+				"blue": 201
+			},
+			"circle": false
+		},
+		{
+			"id": "9c7e09e0-0e5d-11e3-8ffd-0800200c9a66",
+			"type": "image",
+			"file": "computer.png",
+			"name": "computer",
+			"scale": 2,
+			"background": {
+				"red": 255,
+				"green": 174,
+				"blue": 201
+			},
+			"circle": false
+		},
+		{
+			"id": "2b620320-0e6b-11e3-8ffd-0800200c9a66",
+			"type": "image",
+			"file": "blood.png",
+			"name": "blood",
+			"scale": 2,
+			"background": {
+				"red": 255,
+				"green": 174,
+				"blue": 201
+			},
+			"circle": false
+		},
+		{
+			"id": "85290710-0e83-11e3-8ffd-0800200c9a66",
+			"type": "image",
+			"file": "zzzzz.png",
+			"name": "zzzzz",
+			"scale": 2,
+			"background": {
+				"red": 255,
+				"green": 174,
+				"blue": 201
+			},
+			"circle": false
+		},
+		{
+			"id": "6a84a9a0-0e92-11e3-8ffd-0800200c9a66",
+			"type": "image",
+			"file": "mechanicmini.png",
+			"name": "mechanicmini",
+			"scale": 2,
+			"background": {
+				"red": 255,
+				"green": 174,
+				"blue": 201
+			},
+			"circle": false
+		},
+		{
+			"id": "6a84a9a1-0e92-11e3-8ffd-0800200c9a66",
+			"type": "image",
+			"file": "agentmini.png",
+			"name": "agentmini",
+			"scale": 2,
+			"background": {
+				"red": 255,
+				"green": 174,
+				"blue": 201
+			},
+			"circle": false
+		},
+		{
+			"id": "90467ec2-0e92-11e3-8ffd-0800200c9a66",
+			"type": "image",
+			"file": "rowdymini.png",
+			"name": "rowdymini",
+			"scale": 2,
+			"background": {
+				"red": 255,
+				"green": 174,
+				"blue": 201
+			},
+			"circle": false
+		},
+		{
+			"id": "90467ec3-0e92-11e3-8ffd-0800200c9a66",
+			"type": "image",
+			"file": "professormini.png",
+			"name": "professormini",
+			"scale": 2,
+			"background": {
+				"red": 255,
+				"green": 174,
+				"blue": 201
+			},
+			"circle": false
+		},
+		{
+			"id": "503b6505-e1d8-4a2a-98d0-d02d0c353ab3",
+			"type": "image",
+			"file": "fishy.png",
+			"name": "fishy"
+		},
+		{
+			"id": "5154a96d-1944-4596-a547-b74c27506e4a",
+			"type": "blob",
+			"file": "Liberation Sans-Regular14.kravur",
+			"name": "Liberation Sans-Regular14"
+		},
+		{
+			"id": "e822f78f-dd88-4a84-8f27-fffd2a3bb092",
+			"type": "blob",
+			"file": "Liberation Sans-Regular20.kravur",
+			"name": "Liberation Sans-Regular20"
+		},
+		{
+			"id": "94c85123-06e1-44f7-92b0-36b3f7d7eaab",
+			"type": "blob",
+			"file": "localizations.xml",
+			"name": "localizations"
+		},
+		{
+			"id": "fcd52067-5347-466d-afb8-23c9786d24f4",
+			"type": "blob",
+			"file": "text.xml",
+			"name": "text"
+		}
 	],
-	"rooms":
-	[
-
+	"rooms": [
+		{
+			"id": "4f6ef48a-79d3-4e3f-a5e2-1490ba1d7190",
+			"name": "start",
+			"neighbours": [],
+			"assets": [
+				"c659517f-66d8-4dcb-958a-cf727ccb6113",
+				"15b1ea20-4032-11e2-a25f-0800200c9a66",
+				"94c85123-06e1-44f7-92b0-36b3f7d7eaab",
+				"fcd52067-5347-466d-afb8-23c9786d24f4",
+				"5154a96d-1944-4596-a547-b74c27506e4a",
+				"e822f78f-dd88-4a84-8f27-fffd2a3bb092"
+			]
+		},
+		{
+			"id": "657f6c70-d7ce-11e1-9b23-0800200c9a66",
+			"name": "level1",
+			"parent": "4f6ef48a-79d3-4e3f-a5e2-1490ba1d7190",
+			"neighbours": [],
+			"assets": [
+				"a7a42c00-d7cc-11e1-9b23-0800200c9a66",
+				"2348bd72-d7ce-11e1-9b23-0800200c9a66",
+				"2348bd74-d7ce-11e1-9b23-0800200c9a66",
+				"04bf9738-4fe2-4966-8088-70ff042801ed",
+				"14c3245b-82c0-4693-a131-e6f255c872de",
+				"f00b98f6-70a7-4217-a6d6-a54965b634c9",
+				"66f588d6-998a-49d5-a7d6-e2a9a747be51",
+				"2a7ceaee-cc08-4ad2-80d5-7839b6f45f1a",
+				"1a57efc0-0d8c-11e3-8ffd-0800200c9a66",
+				"9c7e09e0-0e5d-11e3-8ffd-0800200c9a66",
+				"2b620320-0e6b-11e3-8ffd-0800200c9a66",
+				"85290710-0e83-11e3-8ffd-0800200c9a66",
+				"6a84a9a0-0e92-11e3-8ffd-0800200c9a66",
+				"6a84a9a1-0e92-11e3-8ffd-0800200c9a66",
+				"90467ec2-0e92-11e3-8ffd-0800200c9a66",
+				"90467ec3-0e92-11e3-8ffd-0800200c9a66",
+				"503b6505-e1d8-4a2a-98d0-d02d0c353ab3",
+				"2348bd76-d7ce-11e1-9b23-0800200c9a66",
+				"5c950390-d7ce-11e1-9b23-0800200c9a66"
+			]
+		}
 	]
 }
