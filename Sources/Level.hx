@@ -18,8 +18,8 @@ class Level {
 		doors = new Array();
 		computers = new Array();
 		destructibleSprites = new Array();
+		interactiveSprites = new Array();
 		instance = this;
-		missionBriefingSprites = new Array();
 	}
 	
 	public function init() : Void { }
