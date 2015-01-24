@@ -112,6 +112,12 @@ class Server {
 		#end
 	}
 	
+	public function createDoor(id: Int): Void {
+		#if js
+		socket.send(Json.stringify( { command: 'createDoor', id: id } ));
+		#end
+	}
+	
 	public function changeDoorOpened(id: Int, opened: Bool): Void {
 		#if js
 		socket.send(Json.stringify( { command: 'doorSetOpened', opened: opened, id: id } ));
