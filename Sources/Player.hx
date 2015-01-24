@@ -41,7 +41,8 @@ class Player extends DestructibleSprite {
 	public var id: Int;
 	public var aimx: Float;
 	public var aimy: Float;
-	public var ataim: Bool = true;
+	public var ataimx: Bool = true;
+	public var ataimy: Bool = true;
 	
 	var muzzlePoint : Vector2;
 	
@@ -87,7 +88,7 @@ class Player extends DestructibleSprite {
 	
 	private var baseSpeed = 4.0;
 	public override function update(): Void {
-		if (!ataim) {
+		if (!ataimx) {
 			if (aimx < x) {
 				left = true;
 				right = false;
@@ -99,7 +100,19 @@ class Player extends DestructibleSprite {
 			else {
 				left = false;
 				right = false;
-				ataim = true;
+				ataimx = true;
+			}
+		}
+		if (!ataimy) {
+			if (aimy < y) {
+				setUp();
+			}
+			else if (aimy > y) {
+				up = false;
+			}
+			else {
+				up = false;
+				ataimy = true;
 			}
 		}
 		
@@ -142,21 +155,6 @@ class Player extends DestructibleSprite {
 		super.update();
 		if (Player.currentPlayer == this) {
 			updateCrosshair();
-		}
-		
-		if (!ataim) {
-			if (left && x <= aimx) {
-				ataim = true;
-				left = false;
-				right = false;
-				x = aimx;
-			}
-			if (right && x >= aimx) {
-				ataim = true;
-				left = false;
-				right = false;
-				x = aimx;
-			}
 		}
 	}
 	

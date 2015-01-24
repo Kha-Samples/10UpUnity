@@ -52,7 +52,8 @@ class Server {
 							if (player.id == data.id) {
 								player.aimx = data.x;
 								player.aimy = data.y;
-								player.ataim = false;
+								player.ataimx = false;
+								player.ataimy = false;
 								break;
 							}
 						}
@@ -75,8 +76,7 @@ class Server {
 		if (!connected) return;
 		if (players.exists(player)) {
 			var old = players[player];
-			//if (Math.abs(player.x - old.lastX) > 100) {
-			if (player.x != old.lastX) {
+			if (player.x != old.lastX || player.y != old.lastY) {
 				socket.send(Json.stringify( { command: 'move', id: player.id, x: player.x, y: player.y } ));
 				old.lastX = player.x;
 				old.lastY = player.y;
