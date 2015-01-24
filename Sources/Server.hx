@@ -41,9 +41,11 @@ class Server {
 				case 'setPlayer':
 					if (data.id == 0) {
 						PlayerBlondie.the.setCurrent();
+						PlayerBullie.the.sleep();
 					}
 					else if (data.id == 1) {
 						PlayerBullie.the.setCurrent();
+						PlayerBlondie.the.sleep();
 					}
 				case 'updatePerson':
 					for (person in Level.the.persons) {
@@ -54,6 +56,8 @@ class Server {
 								player.aimy = data.y;
 								player.ataimx = false;
 								player.ataimy = false;
+								if (data.sleeping && !player.isSleeping()) player.sleep();
+								else if (!data.sleeping && player.isSleeping()) player.unsleep();
 								break;
 							}
 						}

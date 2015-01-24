@@ -143,7 +143,7 @@ class TenUp4 extends Game {
 			Configuration.setScreen(this);
 			mode = StartScreen; // TODO check!
 		} else {
-			var blob = Loader.the.getBlob("level" + levelNumber);
+			var blob = Loader.the.getBlob("flatlevel");
 			var levelWidth: Int = blob.readS32BE();
 			var levelHeight: Int = blob.readS32BE();
 			originalmap = new Array<Array<Int>>();
@@ -174,7 +174,7 @@ class TenUp4 extends Game {
 	
 	public function startGame(spriteCount: Int, sprites: Array<Int>) {
 		Scene.the.clear();
-		var tilemap : Tilemap = new Tilemap("outside", 32, 32, map, tileColissions);
+		var tilemap : Tilemap = new Tilemap("tileset", 32, 32, map, tileColissions);
 		Scene.the.setColissionMap(tilemap);
 		Scene.the.addBackgroundTilemap(tilemap, 1);
 		var TILE_WIDTH : Int = 32;
@@ -192,19 +192,17 @@ class TenUp4 extends Game {
 			var sprite : kha.Sprite = null;
 			switch (sprites[i * 3]) {
 			case 0:
-				//sprite = new PlayerAgent(sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
-				//Scene.the.addHero(sprite);
-			case 1:
-				//sprite = new PlayerProfessor(sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
-				//Scene.the.addHero(sprite);
-			case 2:
-				sprite = new PlayerBullie(sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
-				Level.the.persons.push(cast sprite);
-				Scene.the.addHero(sprite);
-			case 3:
 				sprite = new PlayerBlondie(sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
 				Level.the.persons.push(cast sprite);
 				Scene.the.addHero(sprite);
+			case 1:
+				sprite = new PlayerBullie(sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
+				Level.the.persons.push(cast sprite);
+				Scene.the.addHero(sprite);
+			case 2:
+				
+			case 3:
+				
 			case 4:
 				sprite = new Door(sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
 				Level.the.doors.push( cast sprite );
@@ -285,7 +283,7 @@ class TenUp4 extends Game {
 	
 	private static function isCollidable(tilenumber : Int) : Bool {
 		switch (tilenumber) {
-		case 64, 65, 66, 128, 320, 341, 342: return true;
+		case 27: return true;
 		default:
 			return false;
 		}

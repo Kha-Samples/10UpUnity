@@ -30,8 +30,8 @@
 		{
 			"id": "2348bd74-d7ce-11e1-9b23-0800200c9a66",
 			"type": "image",
-			"file": "outside.png",
-			"name": "outside",
+			"file": "tileset_s.png",
+			"name": "tileset",
 			"scale": 2,
 			"circle": false
 		},
@@ -46,8 +46,8 @@
 		{
 			"id": "5c950390-d7ce-11e1-9b23-0800200c9a66",
 			"type": "blob",
-			"file": "level1",
-			"name": "level1",
+			"file": "flatlevel",
+			"name": "flatlevel",
 			"scale": 1,
 			"circle": false
 		},

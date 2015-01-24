@@ -31,8 +31,8 @@ public class SpritesPanel extends JPanel implements MouseListener, MouseMotionLi
 
 	private SpritesPanel() {
 		int i = 0;
-		sprites.add(new Sprite("../Assets/Graphics/ehefrau.png", i++, 20, 27));
-		sprites.add(new Sprite("../Assets/Graphics/typ.png", i++, 48, 72));
+		sprites.add(new Sprite("../Assets/Graphics/mechanicmini.png", i++, 20, 28));
+		sprites.add(new Sprite("../Assets/Graphics/rowdymini.png", i++, 22, 24));
 		sprites.add(new Sprite("../Assets/Graphics/seller.png", i++, 48, 72));
 		sprites.add(new Sprite("../Assets/Graphics/door.png", i++, 128 / 4, 64));
 		sprites.add(new Sprite("../Assets/Graphics/theke.png", i++, 64, 33));
