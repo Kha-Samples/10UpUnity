@@ -94,7 +94,12 @@ class Player extends DestructibleSprite {
 				ataimx = true;
 			}
 			else {
-				if (aimx < x) {
+				if (Math.abs(x - aimx) < baseSpeed) {
+					left = false;
+					right = false;
+					ataimx = true;
+				}
+				else if (aimx < x) {
 					left = true;
 					right = false;
 				}
