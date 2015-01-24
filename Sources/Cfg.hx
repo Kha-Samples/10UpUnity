@@ -18,7 +18,13 @@ class Cfg
 	static function set_language(value:String):String { return the._language = value; }
 	
 	static public function init() {
-		var data = null; // Storage.defaultFile().readObject();
+		var data = null;
+		try {
+			Storage.defaultFile().readObject();
+		}
+		catch (e: Dynamic) {
+			
+		}
 		if (data == null) the = new Cfg();
 		else the = cast data;
 		// TODO: new PlayerBullie?
