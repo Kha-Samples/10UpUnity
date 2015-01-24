@@ -199,13 +199,19 @@ class TenUp4 extends Game {
 			var sprite : kha.Sprite = null;
 			switch (sprites[i * 3]) {
 			case 0:
-				sprite = new PlayerBlondie(sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
-				Level.the.persons.push(cast sprite);
-				Scene.the.addHero(sprite);
+				if (PlayerBlondie.the == null) {
+					sprite = new PlayerBlondie(sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
+					PlayerBlondie.the.sleep();
+					Level.the.persons.push(cast sprite);
+					Scene.the.addHero(sprite);
+				}
 			case 1:
-				sprite = new PlayerBullie(sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
-				Level.the.persons.push(cast sprite);
-				Scene.the.addHero(sprite);
+				if (PlayerBullie.the == null) {
+					sprite = new PlayerBullie(sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
+					PlayerBullie.the.sleep();
+					Level.the.persons.push(cast sprite);
+					Scene.the.addHero(sprite);
+				}
 			case 2:
 				//klowand
 			case 3:
@@ -258,9 +264,6 @@ class TenUp4 extends Game {
 		
 		//PlayerBullie.the.setCurrent();
 		Server.the.trigger();
-		Configuration.setScreen(this);
-		mode = Game;
-		Scene.the.camx = Std.int(width / 2);
 	}
 	
 	public function victory() : Void {
@@ -300,7 +303,7 @@ class TenUp4 extends Game {
 		updateMouse();
 		var player = Player.current();
 		if (player != null) {
-			Scene.the.camx = Std.int(player.x) + Std.int(player.width / 2); // TODO: block view with closed dors
+			Scene.the.camx = Std.int(player.x) + Std.int(player.width / 2);
 			Scene.the.camy = Std.int(player.y + player.height + 80 - 0.5 * height);
 		}
 		if (advanceDialogue) {
@@ -329,13 +332,17 @@ class TenUp4 extends Game {
 			g.transformation = Matrix3.identity();
 			g.color = Color.Black;
 			for (door in Level.the.doors) {
-				var doorX = door.x + 0.5 * door.width;
-				var doorXscreen = doorX - scene.screenOffsetX; 
-				if (!door.opened && door.health > 0 && doorXscreen > 0 && doorXscreen < width) {
+				if (!door.opened && door.health > 0) {
 					if (door.x < Player.current().x) {
-						g.fillRect(0, 0, doorXscreen, height);
+						var doorXscreen = door.x - scene.screenOffsetX; 
+						if (doorXscreen > 0 && doorXscreen < width) {
+							g.fillRect(0, 0, doorXscreen, height);
+						}
 					} else {
-						g.fillRect(doorXscreen, 0, width - doorXscreen, height);
+						var doorXscreen = door.x + 0.5 * door.width - scene.screenOffsetX; 
+						if (doorXscreen > 0 && doorXscreen < width) {
+							g.fillRect(doorXscreen, 0, width - doorXscreen, height);
+						}
 					}
 				}
 			}

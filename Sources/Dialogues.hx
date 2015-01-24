@@ -36,4 +36,13 @@ class Dialogues {
 			, new StartDialogue(function () { Localization.language = Cfg.language; } )
 		], true );
 	}
+	
+	static public function startAsBully() {
+		Dialogue.insert( [
+			new Action( [PlayerBullie.the], ActionType.AWAKE )
+			, new Bla(Keys_text.START_AS_BULLY_1, PlayerBullie.the)
+			, new Bla(Keys_text.START_AS_BULLY_2, PlayerBullie.the)
+			, new Bla(Keys_text.START_AS_BULLY_3, PlayerBullie.the)
+		] );
+	}
 }

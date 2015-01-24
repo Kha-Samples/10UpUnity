@@ -1,6 +1,7 @@
 package;
 
 import haxe.Json;
+import TenUp4;
 
 #if js
 import js.html.WebSocket;
@@ -12,6 +13,7 @@ class PlayerData {
 	public var lastY: Float;
 }
 
+@:access(TenUp4) 
 class Server {
 	public static var the(get, null): Server;
 	
@@ -43,12 +45,12 @@ class Server {
 				case 'setPlayer':
 					if (data.id == 0) {
 						PlayerBlondie.the.setCurrent();
-						PlayerBullie.the.sleep();
 					}
 					else if (data.id == 1) {
 						PlayerBullie.the.setCurrent();
-						PlayerBlondie.the.sleep();
 					}
+					kha.Configuration.setScreen(TenUp4.the);
+					TenUp4.the.mode = Game;
 				case 'updatePerson':
 					for (person in Level.the.persons) {
 						if (Std.is(person, Player)) {
@@ -76,6 +78,8 @@ class Server {
 	public function trigger(): Void {
 		#if !js
 		PlayerBullie.the.setCurrent();
+		kha.Configuration.setScreen(TenUp4.the);
+		TenUp4.the.mode = Game;
 		#end
 	}
 	
