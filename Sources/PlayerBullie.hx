@@ -67,14 +67,14 @@ class PlayerBullie extends Player {
 	  Hauen
 	**/
 	var fistOfDoom : FistOfDoom;
-	override public function prepareSpecialAbilityA(gameTime: Float): Void {
+	override public function prepareSpecialAbilityA(): Void {
 		if (fistOfDoom == null) {
 			fistOfDoom = new FistOfDoom(this, 20, 20);
 			Scene.the.addProjectile( fistOfDoom );
 		}
 	}
 	
-	override public function useSpecialAbilityA(gameTime : Float) : Void {
+	override public function useSpecialAbilityA() : Void {
 		if (fistOfDoom != null) {
 			fistOfDoom.releaseDoom();
 		}
@@ -85,10 +85,10 @@ class PlayerBullie extends Player {
 	**/
 	var lifted : InteractiveSprite;
 	  
-	override public function prepareSpecialAbilityB(gameTime: Float): Void {
+	override public function prepareSpecialAbilityB(): Void {
 		if (lifted == null) {
 			var rect = collisionRect();
-			for (checkSprite in TenUp4.instance.level.interactiveSprites) {
+			for (checkSprite in Level.the.interactiveSprites) {
 				if ( checkSprite != this && checkSprite.isLiftable ) {
 					if ( rect.collision( checkSprite.collisionRect() ) ) {
 						lifted = checkSprite;
@@ -98,7 +98,7 @@ class PlayerBullie extends Player {
 			}
 		}
 	}
-	override public function useSpecialAbilityB(gameTime: Float): Void {
+	override public function useSpecialAbilityB(): Void {
 		lifted = null;
 	}
 }

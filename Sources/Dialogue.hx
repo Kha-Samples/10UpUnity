@@ -1,6 +1,6 @@
 package;
 
-import TenUp3.Mode;
+import TenUp4.Mode;
 import kha.Scene;
 
 interface DialogueItem {
@@ -8,7 +8,7 @@ interface DialogueItem {
 	public var finished(default, null) : Bool;
 }
 
-@:access(TenUp3.mode)
+@:access(TenUp4.mode)
 class Dialogue {
 	private static var items: Array<DialogueItem>;
 	private static var index: Int = -1;
@@ -25,7 +25,7 @@ class Dialogue {
 		}
 		Dialogue.items = items;
 		index = -1;
-		TenUp3.getInstance().mode = Mode.BlaBlaBla;
+		TenUp4.the.mode = Mode.BlaBlaBla;
 		kha.Sys.mouse.hide();
 		next();
 	}
@@ -64,7 +64,6 @@ class Dialogue {
 		}
 	}
 	
-	@:access(TenUp3.subgame)
 	public static function next(): Void {
 		if (items == null) return;
 		
@@ -78,10 +77,7 @@ class Dialogue {
 		BlaBox.setText(null);
 		
 		if (index >= items.length) {
-			TenUp3.getInstance().mode = Mode.Game;
-			if (TenUp3.instance.subgame == TenUp3.SubGame.TEN_UP_3) {
-				kha.Sys.mouse.show();
-			}
+			TenUp4.the.mode = Mode.Game;
 			items = null;
 			index = -1;
 			return;

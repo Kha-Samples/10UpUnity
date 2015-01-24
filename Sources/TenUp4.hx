@@ -1,5 +1,7 @@
 package;
 
+import dialogue.BlaWithChoices;
+import dialogue.StartDialogue;
 import kha.Button;
 import kha.Color;
 import kha.Font;
@@ -9,6 +11,9 @@ import kha.Game;
 import kha.graphics2.Graphics;
 import kha.HighscoreList;
 import kha.Image;
+import kha.input.Gamepad;
+import kha.input.Keyboard;
+import kha.input.Mouse;
 import kha.Key;
 import kha.Loader;
 import kha.LoadingScreen;
@@ -19,25 +24,29 @@ import kha.Scaler;
 import kha.Scene;
 import kha.Scheduler;
 import kha.Score;
+import kha.Sys;
 import kha.Configuration;
+import kha.ScreenRotation;
+import kha.SoundChannel;
 import kha.Sprite;
+import kha.Storage;
 import kha.Tile;
 import kha.Tilemap;
 import levels.Intro;
 import levels.Level1;
+import localization.Keys_text;
 
 enum Mode {
 	Loading;
 	StartScreen;
-	MissionBriefing;
 	Game;
-	Pause;
+	BlaBlaBla;
 	GameOver;
 	Congratulations;
 }
 
 class TenUp4 extends Game {
-	public static var instance(default, null): TenUp4;
+	public static var the(default, null): TenUp4;
 	private var backbuffer: Image;
 	//var music : Music;
 	var tileColissions : Array<Tile>;
@@ -46,71 +55,90 @@ class TenUp4 extends Game {
 	var highscoreName : String;
 	var shiftPressed : Bool;
 	private var font: Font;
-	private var pauseAnimIndex: Int = 0;
-	public var level(default, null): Level;
 	
-	public var currentGameTime(default, null) : Float;
-	public var currentTimeDiff(default, null) : Float;
-	var lastTime : Float;
 	private var minis: Array<Image>;
+	
+	public var mouseX: Float;
+	public var mouseY: Float;
+	private var screenMouseX: Float;
+	private var screenMouseY: Float;
 	
 	public var mode(default, null) : Mode;
 	
 	public function new() {
-		super("10Up", false);
-		instance = this;
+		super("10Up: Unity", false);
+		the = this;
 		shiftPressed = false;
 		highscoreName = "";
 		mode = Mode.Loading;
 		minis = new Array<Image>();
 	}
 	
-	public static function getInstance(): TenUp4 {
-		return instance;
-	}
-	
-	public function pause(): Void {
-		if (mouseUpAction != null) {
-			mouseUpAction(currentGameTime);
-			mouseUpAction = null;
-		}
-		if (nextPlayer() && !level.checkVictory()) mode = Pause;
-	}
-	
 	public override function init(): Void {
 		backbuffer = Image.createRenderTarget(1024, 768);
 		Configuration.setScreen(new LoadingScreen());
+		Player.init();
 		Loader.the.loadRoom("start", initStart);
-	}
-	
-	public function enterLevel(levelNumber: Int) : Void {
-		Configuration.setScreen( new LoadingScreen() );
-		switch (levelNumber) {
-		case 0:
-			level = new Intro();
-			Loader.the.loadRoom("start", initLevel.bind(0));
-		case 1:
-			level = new Level1();
-			Loader.the.loadRoom("level1", initLevel.bind(1));
-		}
+		Random.init( Math.round( Sys.getTime() * 1000 ) );
 	}
 	
 	public function initStart(): Void {
-		Random.init( Math.round( Scheduler.time() * 1000 ) );
+		font = Loader.the.loadFont("arial", FontStyle.Default, 34);
+		Localization.init("localizations");
+		
+		mode = StartScreen;
+		
+		Cfg.init();
+		if (Cfg.language == null) {
+			Configuration.setScreen(this);
+			var msg = "Please select your language:";
+			var choices = new Array<Array<Dialogue.DialogueItem>>();
+			var i = 1;
+			for (l in Localization.availableLanguages.keys()) {
+				choices.push([new StartDialogue(function() { Cfg.language = l; } )]);
+				msg += '\n($i): ${Localization.availableLanguages[l]}';
+				++i;
+			}
+			Dialogue.set( [
+				new BlaWithChoices(msg, null, choices)
+				, new StartDialogue(Cfg.save)
+				, new StartDialogue(initTitleScreen)
+			] );
+		} else {
+			initTitleScreen();
+		}
+	}
+
+	function initTitleScreen() {
+		Localization.language = Cfg.language;
+		Localization.buildKeys("../Assets/text.xml","text");
+		
 		var logo = new Sprite( Loader.the.getImage( "10up-logo" ) );
 		logo.x = 0.5 * width - 0.5 * logo.width;
 		logo.y = 0.5 * height - 0.5 * logo.height;
 		Scene.the.clear();
 		Scene.the.setBackgroundColor(Color.fromBytes(0, 0, 0));
 		Scene.the.addHero( logo );
-		mode = StartScreen;
+		
+		// TODO: add Text UNITY
+		
 		Configuration.setScreen(this);
-        //flash.Lib.current.stage.displayState = FULL_SCREEN;
+	}
+	
+	public function enterLevel(levelNumber: Int) : Void {
+		Configuration.setScreen( new LoadingScreen() );
+		switch (levelNumber) {
+		case 0:
+			Level.the = new Intro();
+			Loader.the.loadRoom("start", initLevel.bind(0));
+		case 1:
+			Level.the = new Level1();
+			Loader.the.loadRoom("level1", initLevel.bind(1));
+		}
 	}
 	
 	private function initLevel(levelNumber: Int): Void {
-		level.init();
-		font = Loader.the.loadFont("arial", new FontStyle(false, false, false), 34);
+		Level.the.init();
 		minis = new Array();
 		minis.push(Loader.the.getImage("agentmini"));
 		minis.push(Loader.the.getImage("professormini"));
@@ -123,9 +151,7 @@ class TenUp4 extends Game {
 		if ( levelNumber == 0 ) {
 			Scene.the.clear();
 			Configuration.setScreen(this);
-			currentGameTime = 0;
-			lastTime = Scheduler.time();
-			mode = MissionBriefing;
+			mode = StartScreen; // TODO check!
 		} else {
 			var blob = Loader.the.getBlob("level" + levelNumber);
 			var levelWidth: Int = blob.readS32BE();
@@ -158,7 +184,6 @@ class TenUp4 extends Game {
 	
 	public function startGame(spriteCount: Int, sprites: Array<Int>) {
 		Scene.the.clear();
-		Player.init();
 		var tilemap : Tilemap = new Tilemap("outside", 32, 32, map, tileColissions);
 		Scene.the.setColissionMap(tilemap);
 		Scene.the.addBackgroundTilemap(tilemap, 1);
@@ -172,6 +197,10 @@ class TenUp4 extends Game {
 				}
 			}
 		}
+		
+		if (Gamepad.get(0) != null) Gamepad.get(0).notify(axisListener, buttonListener);
+		Keyboard.get().notify(keydown, keyup);
+		Mouse.get().notify(mousedown, mouseup, mousemove, mousewheel);
 		
 		for (i in 0...spriteCount) {
 			var sprite : kha.Sprite = null;
@@ -190,7 +219,7 @@ class TenUp4 extends Game {
 				Scene.the.addHero(sprite);
 			case 4:
 				sprite = new Door(sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
-				level.doors.push( cast sprite );
+				Level.the.doors.push( cast sprite );
 				Scene.the.addOther(sprite);
 			case 5:
 				/*sprite = new Enemy(sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
@@ -208,7 +237,7 @@ class TenUp4 extends Game {
 				Scene.the.addOther(sprite);*/
 			case 9:
 				sprite = new Computer(sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
-				level.computers.push(cast sprite);
+				Level.the.computers.push(cast sprite);
 				Scene.the.addOther(sprite);
 			case 10:
 				/*sprite = new Machinegun(sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
@@ -226,10 +255,10 @@ class TenUp4 extends Game {
 				continue;
 			}
 			if ( Std.is( sprite, DestructibleSprite ) ) {
-				level.destructibleSprites.push( cast sprite );
-				level.interactiveSprites.push( cast sprite );
+				Level.the.destructibleSprites.push( cast sprite );
+				Level.the.interactiveSprites.push( cast sprite );
 			} else if ( Std.is( sprite, InteractiveSprite ) ) {
-				level.interactiveSprites.push( cast sprite );
+				Level.the.interactiveSprites.push( cast sprite );
 			}
 		}
 		
@@ -237,17 +266,15 @@ class TenUp4 extends Game {
 		Player.getPlayer(0).setCurrent();
 		//Player.getInstance().reset();
 		Configuration.setScreen(this);
-		currentGameTime = 0;
-		lastTime = Scheduler.time();
-		mode = MissionBriefing;
+		mode = Game;
 		Scene.the.camx = Std.int(width / 2);
 	}
 	
 	public function victory() : Void {
-		if (level.nextLevelNum < 0) {
+		if (Level.the.nextLevelNum < 0) {
 			showCongratulations();
 		} else {
-			enterLevel( level.nextLevelNum );
+			enterLevel( Level.the.nextLevelNum );
 		}
 	}
 	
@@ -276,44 +303,27 @@ class TenUp4 extends Game {
 	}
 	
 	public override function update() {
-		var currentTime = Scheduler.time();
-		if (mode == Game || mode == MissionBriefing) {
-			currentTimeDiff = currentTime - lastTime;
-			currentGameTime += currentTimeDiff;
-			if (mode == Game) {
-				Player.current().elapse( currentTimeDiff );
-				super.update();
-				Scene.the.camx = Std.int(Player.current().x) + Std.int(Player.current().width / 2);
-				level.update(currentGameTime);
-			} else {
-				if (level.updateMissionBriefing(currentGameTime)) {
-					currentGameTime = 0;
-					mode = Pause;
-				}
-				lastTime = currentTime;
-				return;
-			}
-		} else if (mode != Pause) {
-			super.update();
-		} else {
-			pauseAnimIndex += 1;
-			
-			var aimx = Std.int(Player.current().x) + Std.int(Player.current().width / 2);
-			var camspeed: Int = 10;
-			if (Scene.the.camx > aimx) {
-				Scene.the.camx -= camspeed;
-				if (Scene.the.camx < aimx) Scene.the.camx = aimx; 
-			}
-			else if (Scene.the.camx < aimx) {
-				Scene.the.camx += camspeed;
-				if (Scene.the.camx > aimx) Scene.the.camx = aimx; 
-			}
+		super.update();
+		updateMouse();
+		var player = Player.current();
+		if (player != null) {
+			//Scene.the.camx = Std.int(player.x) + Std.int(player.width / 2);
+			Scene.the.camy = Std.int(player.y + player.height + 80 - 0.5 * height);
 		}
-		lastTime = currentTime;
+		if (advanceDialogue) {
+			Dialogue.next();
+			advanceDialogue = false;
+		}
+		switch (mode) {
+		case BlaBlaBla:
+			Dialogue.update();
+		default:
+		}
 	}
 	
+	public var renderOverlay : Bool;
+	public var overlayColor : Color;
 	public override function render(frame: Framebuffer) {
-		//if (Player.getInstance() == null) return;
 		var g = backbuffer.g2;
 		g.begin();
 		switch (mode) {
@@ -323,7 +333,7 @@ class TenUp4 extends Game {
 		case Congratulations:
 			var congrat = Loader.the.getImage("congratulations");
 			g.drawImage(congrat, width / 2 - congrat.width / 2, height / 2 - congrat.height / 2);
-		case Game, Pause:
+		case Game:
 			scene.render(g);
 			g.transformation = Matrix3.identity();
 			//painter.setColor(Color.fromBytes(0, 0, 0));
@@ -334,17 +344,14 @@ class TenUp4 extends Game {
 			drawPlayerInfo(g, 1, 80, 700, Color.fromBytes(0, 255, 0));
 			drawPlayerInfo(g, 2, 140, 700, Color.fromBytes(0, 0, 255));
 			drawPlayerInfo(g, 3, 200, 700, Color.fromBytes(255, 255, 0));
-			
-			if (mode == Pause) {
-				var pauseImage = Loader.the.getImage("pause");
-				g.drawScaledSubImage(pauseImage, 0, (Std.int(pauseAnimIndex / 12) % 5) * (pauseImage.height / 5), pauseImage.width, pauseImage.height / 5, width / 2 - pauseImage.width / 2, height / 4 - pauseImage.height / 5 / 2, pauseImage.width, pauseImage.height / 5);
-			}
-		case MissionBriefing:
-			scene.render(g);
-			Level.the.renderMissionBriefing(g);
-		case Loading, StartScreen:
+		case Loading, StartScreen, BlaBlaBla:
 			scene.render(g);
 		}
+		if (renderOverlay) {
+			g.color = overlayColor;
+			g.fillRect(0, 0, width, height);
+		}
+		BlaBox.render(g);
 		g.end();
 		
 		frame.g2.begin();
@@ -381,234 +388,168 @@ class TenUp4 extends Game {
 		g.fillRect(x, y + 35, healthBar, 10);
 		g.color = Color.Black;
 		g.fillRect(x + healthBar, y + 35, 40 - healthBar, 10);
-		g.color = Color.fromBytes(0, 255, 255);
-		g.fillRect(x, y + 45, Player.getPlayer(index).timeLeft() * 4, 10);
+		//g.color = Color.fromBytes(0, 255, 255);
+		//g.fillRect(x, y + 45, Player.getPlayer(index).timeLeft() * 4, 10);
 	}
-
-	override public function buttonDown(button : Button) : Void {
-		switch (mode) {
-		case Game:
-			switch (button) {
-			case UP:
-				Player.current().setUp();
-			case LEFT:
-				Player.current().left = true;
-			case RIGHT:
-				Player.current().right = true;
+	
+	private function axisListener(axis: Int, value: Float): Void {
+		switch (axis) {
+			case 0:
+				if (value < -0.2) {
+					Player.current().left = true;
+					Player.current().right = false;
+				}
+				else if (value > 0.2) {
+					Player.current().right = true;
+					Player.current().left = false;
+				}
+				else {
+					Player.current().left = false;
+					Player.current().right = false;
+				}
+		}
+	}
+	
+	private function buttonListener(button: Int, value: Float): Void {
+		switch (button) {
+			case 0, 1, 2, 3:
+				if (value > 0.5) keydown(Key.UP, null);
+				else keyup(Key.UP, null);
+			case 14:
+				if (value > 0.5) {
+					keydown(Key.LEFT, null);
+					keyup(Key.RIGHT, null);
+				}
+				else {
+					keydown(Key.LEFT, null);
+					keydown(Key.RIGHT, null);
+				}
+			case 15:
+				if (value > 0.5) {
+					keyup(Key.LEFT, null);
+					keydown(Key.RIGHT, null);
+				}
+				else {
+					keydown(Key.LEFT, null);
+					keydown(Key.RIGHT, null);
+				}
+// TODO: 
+	/*
 			case BUTTON_1:
 				Player.current().prepareSpecialAbilityA(currentGameTime);
 			case BUTTON_2:
 				Player.current().prepareSpecialAbilityB(currentGameTime);
-			default:
-			}
-		case Pause:
-			switch (button) {
-				case LEFT:
-					prevPlayer();
-				case RIGHT:
-					nextPlayer();
-				default:
-			}
-		default:
-		}
-	}
-	
-	override public function buttonUp(button : Button) : Void {
-		switch (mode) {
-		case Game:
-			switch (button) {
-			case UP:
-				Player.current().up = false;
-			case LEFT:
-				Player.current().left = false;
-			case RIGHT:
-				Player.current().right = false;
 			case BUTTON_1:
 				Player.current().useSpecialAbilityA(currentGameTime);
 			case BUTTON_2:
 				Player.current().useSpecialAbilityB(currentGameTime);
-			default:
-			}
-		default:
+				*/
 		}
 	}
 	
-	private function nextPlayer(): Bool {
-		var count: Int = 0;
-		var index = Player.getPlayerIndex();
-		while (true) {
-			++index;
-			if (index > 3) index = 0;
-			var player = Player.getPlayer(index);
-			++count;
-			if (!player.isSleeping()) {
-				player.setCurrent();
-				return true;
-			}
-			if (count > 4) return false;
-		}
-		return false;
-	}
-	
-	private function prevPlayer(): Bool {
-		var count: Int = 0;
-		var index = Player.getPlayerIndex();
-		while (true) {
-			--index;
-			if (index < 0) index = 3;
-			var player = Player.getPlayer(index);
-			++count;
-			if (!player.isSleeping()) {
-				player.setCurrent();
-				return true;
-			}
-			if (count > 4) return false;
-		}
-		return false;
-	}
-	
-	override public function keyDown(key : Key, char : String) : Void {
+	public function keydown(key: Key, char: String) : Void {
 		if (key == Key.SHIFT) shiftPressed = true;
 		
-		if ( mode == MissionBriefing ) {
-			return;
-		}
-		
-		if (key == Key.CHAR) {
-			switch (char) {
+		if (mode == Mode.Game) {
+			switch (key) {
+			case Key.CTRL:
+				Dialogue.next();
+			case Key.CHAR:
+				switch(char) {
 				case 'a', 'A':
-					buttonDown(Button.LEFT);
+					keydown(Key.LEFT, null);
 				case 'd', 'D':
-					buttonDown(Button.RIGHT);
+					keydown(Key.RIGHT, null);
 				case 'w', 'W':
-					buttonDown(Button.UP);
+					keydown(Key.UP, null);
 				case 's', 'S':
-					buttonDown(Button.DOWN);
-			}
-			
-			if (mode == Mode.Game) {
-				if (char == " ") {
-					mode = Pause;
-					if (mouseUpAction != null) {
-						mouseUpAction(currentGameTime);
-						mouseUpAction = null;
-					}
-					Player.current().right = false;
-					Player.current().left = false;
-					Player.current().up = false;
+					keydown(Key.DOWN, null);
+				default:
 				}
-			}
-			else if (mode == Mode.Pause) {
-				if (char == " ") {
-					mode = Game;
-				}
+			case Key.LEFT:
+				Player.current().left = true;
+			case Key.RIGHT:
+				Player.current().right = true;
+			case Key.UP:
+				Player.current().setUp();
+			default:
 			}
 		}
 	}
 	
-	override public function keyUp(key : Key, char : String) : Void {
-		//if (key != null && key == Key.SHIFT) shiftPressed = false;
+	public function keyup(key : Key, char : String) : Void {
 		if (key == Key.SHIFT) shiftPressed = false;
-		
-		if ( mode == MissionBriefing ) {
-			level.anyKey = true;
-			return;
-		}
-		
-		if (mode == StartScreen) {
-			enterLevel(0);
-		} else {
+		switch (key) {
+		case Key.ESC:
+			Dialogues.escMenu();
+		case Key.CTRL:
+			Player.current().up = false;
+		case Key.CHAR:
 			switch (char) {
-				case 'a', 'A':
-					buttonUp(Button.LEFT);
-				case 'd', 'D':
-					buttonUp(Button.RIGHT);
-				case 'w', 'W':
-					buttonUp(Button.UP);
-				case 's', 'S':
-					buttonUp(Button.DOWN);
+			case 'a', 'A':
+				keyup(Key.LEFT, null);
+			case 'd', 'D':
+				keyup(Key.RIGHT, null);
+			case 'w', 'W':
+				keyup(Key.UP, null);
 			}
+		case Key.LEFT:
+			Player.current().left = false;
+		case Key.RIGHT:
+			Player.current().right = false;
+		case Key.UP:
+			Player.current().up = false;
+		default:
 		}
 	}
 	
-	public var mouseX(default, null) : Float;
-	public var mouseY(default, null) : Float;
-	override public function mouseMove(x:Int, y:Int) : Void {
-		mouseX = x + Scene.the.screenOffsetX;
-		mouseY = y + Scene.the.screenOffsetY;
+	private function updateMouse(): Void {
+		mouseX = screenMouseX + Scene.the.screenOffsetX;
+		mouseY = screenMouseY + Scene.the.screenOffsetY;
 	}
 	
-	override public function mouseDown(x: Int, y: Int): Void {
-		if ( mode == MissionBriefing ) {
-			return;
-		}
-		mouseX = x + Scene.the.screenOffsetX;
-		mouseY = y + Scene.the.screenOffsetY;
-		if (mode == Game) {
+	public function mousedown(button: Int, x: Int, y: Int): Void {
+		switch(mode) {
+		case Game:
 			if (mouseUpAction == null) {
-				if (shiftPressed) {
-					Player.current().prepareSpecialAbilityB(currentGameTime);
+				switch (button) {
+				case 0:
+					Player.current().prepareSpecialAbilityA();
+					mouseUpAction = Player.current().useSpecialAbilityA;
+				case 1:
+					Player.current().prepareSpecialAbilityB();
 					mouseUpAction = Player.current().useSpecialAbilityB;
 				}
-				else {
-					Player.current().prepareSpecialAbilityA(currentGameTime);
-					mouseUpAction = Player.current().useSpecialAbilityA;
-				}
 			}
-		}
-	}
-	
-	private var mouseUpAction : Float->Void;
-	
-	override public function mouseUp(x: Int, y: Int): Void {
-		if ( mode == MissionBriefing ) {
-			level.anyKey = true;
-			return;
-		}
-		mouseX = x + Scene.the.screenOffsetX;
-		mouseY = y + Scene.the.screenOffsetY;
-		switch (mode) {
-		case Game:
-			if (mouseUpAction != null) {
-				mouseUpAction( currentGameTime );
-				mouseUpAction = null;
-			}
-		case StartScreen:
-			enterLevel(0);
 		default:
 		}
 	}
 	
-	override public function rightMouseDown(x: Int, y: Int): Void {
-		if ( mode == MissionBriefing ) {
-			return;
-		}
-		mouseX = x + Scene.the.screenOffsetX;
-		mouseY = y + Scene.the.screenOffsetY;
-		if (mode == Game) {
-			if (mouseUpAction == null) {
-				Player.current().prepareSpecialAbilityB(currentGameTime);
-				mouseUpAction = Player.current().useSpecialAbilityB;
+	private var mouseUpAction : Void->Void;
+	public var advanceDialogue: Bool = false;
+	public function mouseup(button: Int, x: Int, y: Int): Void {
+		screenMouseX = x;
+		screenMouseY = y;
+		updateMouse();
+		
+		switch (mode) {
+		case BlaBlaBla:
+			advanceDialogue = true;
+		case Game:
+			if (mouseUpAction != null) {
+				mouseUpAction();
+				mouseUpAction = null;
 			}
+		default:
 		}
 	}
 	
-	override public function rightMouseUp(x: Int, y: Int): Void {
-		if ( mode == MissionBriefing ) {
-			level.anyKey = true;
-			return;
-		}
-		mouseX = x + Scene.the.screenOffsetX;
-		mouseY = y + Scene.the.screenOffsetY;
-		switch (mode) {
-		case Game:
-			if (mouseUpAction != null) {
-				mouseUpAction( currentGameTime );
-				mouseUpAction = null;
-			}
-		case StartScreen:
-			enterLevel(0);
-		default:
-		}
+	public function mousemove(x: Int, y: Int): Void {
+		screenMouseX = x;
+		screenMouseY = y;
+		updateMouse();
+	}
+	
+	public function mousewheel(delta: Int): Void {
 	}
 }

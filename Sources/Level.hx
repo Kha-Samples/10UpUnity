@@ -4,7 +4,7 @@ import kha.graphics2.Graphics;
 import kha.Sprite;
 
 class Level {
-	private static var instance: Level;
+	public static var the: Level;
 	private var won: Bool = false;
 	
 	public var doors(default, null) : Array<Door>;
@@ -19,22 +19,15 @@ class Level {
 		computers = new Array();
 		destructibleSprites = new Array();
 		interactiveSprites = new Array();
-		instance = this;
 	}
 	
 	public function init() : Void { }
-	
-	public static var the(get, null): Level;
-	
-	private static function get_the(): Level {
-		return instance;
-	}
 	
 	var nextVictoryCheck : Float = 0;
 	public function update(time: Float) {
 		if ( won ) {
 			if (victoryActions(time)) {
-				TenUp4.getInstance().victory();
+				TenUp4.the.victory();
 			}
 		}
 		if ( nextVictoryCheck <= time ) {
@@ -50,7 +43,7 @@ class Level {
 					}
 				}
 				if (!alive) {
-					TenUp4.getInstance().defeat();
+					TenUp4.the.defeat();
 				}
 			} 
 		}
@@ -65,17 +58,6 @@ class Level {
 		var r = _anyKey;
 		_anyKey = false;
 		return r;
-	}
-	
-	public function updateMissionBriefing(time: Float) : Bool { return true; }
-	
-	private var missionBriefingSprites : Array<Sprite>;
-
-	public function renderMissionBriefing(g: Graphics) : Void {
-		//**g.translate(0, 0);
-		for (sprite in missionBriefingSprites) {
-			sprite.render(g);
-		}
 	}
 	
 	public function checkVictory() : Bool { return false; }

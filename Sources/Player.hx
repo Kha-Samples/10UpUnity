@@ -37,7 +37,6 @@ class Player extends DestructibleSprite {
 	var score : Int;
 	var round : Int;
 	private var hitSound: Sound;
-	private var time: Float;
 	private static var currentPlayer: Player = null;
 	private static var jumpmans: Array<Player>;
 	
@@ -63,7 +62,6 @@ class Player extends DestructibleSprite {
 		left = false;
 		lookRight = true;
 		killed = false;
-		time = 0;
 		jumpcount = 0;
 		crosshair = new Vector2(1, 0);
 		isRepairable = true;
@@ -101,16 +99,6 @@ class Player extends DestructibleSprite {
 	
 	public function setCurrent(): Void {
 		currentPlayer = this;
-	}
-	
-	public function timeLeft(): Float {
-		return Math.max(10 - time, 0);
-	}
-	
-	public function elapse(time: Float): Void {
-		if (killed) return;
-		this.time += time;
-		if (this.time > 10) sleep();
 	}
 	
 	public function reset() {
@@ -205,9 +193,6 @@ class Player extends DestructibleSprite {
 		speedy = 0;
 		speedx = 0;
 		killed = true;
-		if (this == currentPlayer) {
-			TenUp4.getInstance().pause();
-		}
 	}
 	
 	public function unsleep() {
@@ -238,19 +223,19 @@ class Player extends DestructibleSprite {
 	}
 	
 	
-	public function prepareSpecialAbilityA(gameTime : Float) : Void {
+	public function prepareSpecialAbilityA() : Void {
 		
 	}
 	
-	public function useSpecialAbilityA(gameTime : Float) : Void {
+	public function useSpecialAbilityA() : Void {
 		
 	}
 	
-	public function prepareSpecialAbilityB(gameTime : Float) : Void {
+	public function prepareSpecialAbilityB() : Void {
 		
 	}
 	
-	public function useSpecialAbilityB(gameTime : Float) : Void {
+	public function useSpecialAbilityB() : Void {
 		
 	}
 	
@@ -271,8 +256,7 @@ class Player extends DestructibleSprite {
 					hitSound.play();
 				}
 		} else if ( value > _health && _health <= 0 ) {
-			var resurected = timeLeft() > 0;
-			if (killed && resurected) {
+			if (killed) {
 				unsleep();
 			}
 		}
@@ -286,8 +270,8 @@ class Player extends DestructibleSprite {
 	public function updateCrosshair() {
 		if (Player.current() != null) {
 			var v = center;
-			v.x = TenUp4.instance.mouseX - v.x;
-			v.y = TenUp4.instance.mouseY - v.y;
+			v.x = TenUp4.the.mouseX - v.x;
+			v.y = TenUp4.the.mouseY - v.y;
 			//v.y += 0.1 * height;
 			if (lookRight) {
 				if (v.x < 0) {

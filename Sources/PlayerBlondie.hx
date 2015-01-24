@@ -2,6 +2,7 @@ package;
 
 import kha.Animation;
 import kha.Rectangle;
+import kha.Scheduler;
 
 class PlayerBlondie extends Player {
 	private var danceAnimation: Animation;
@@ -74,25 +75,25 @@ class PlayerBlondie extends Player {
 	override public function update() {
 		if ( repairing != null ) {
 			animation.next();
-			var amount = Math.round( repairAmountPerSec * (TenUp4.instance.currentGameTime - lastRepairTime) );
+			var amount = Math.round( repairAmountPerSec * (Scheduler.time() - lastRepairTime) );
 			if ( amount > 0 ) {
-				lastRepairTime = TenUp4.instance.currentGameTime;
+				lastRepairTime = Scheduler.time();
 				repairing.health += amount;
 			}
 		} 
 		if (isDancing) {
 			if ( (lastDanceTime > 0 && (up || right || left)) || (repairing != null) ) {
-				lastDanceTime = Math.max(TenUp4.instance.currentGameTime - lastDanceTime, -2);
+				lastDanceTime = Math.max(Scheduler.time() - lastDanceTime, -2);
 				if (repairing != null) {
 					super.update();
 				}
 			}
 			if ( lastDanceTime < 0 ) {
-				lastDanceTime += TenUp4.instance.currentTimeDiff;
+				lastDanceTime += Scheduler.deltaTime;
 				if ( lastDanceTime >= 0 ) {
 					isDancing = false;
 				}
-			} else if ( Player.current() != this && lastDanceTime < TenUp4.instance.currentGameTime ) {
+			} else if ( Player.current() != this && lastDanceTime < Scheduler.time() ) {
 				isDancing = false;
 			}
 			if (repairing == null) {
@@ -114,15 +115,15 @@ class PlayerBlondie extends Player {
 	**/
 	public var isDancing(default, null) : Bool = false;
 	var lastDanceTime : Float;
-	override public function prepareSpecialAbilityA(gameTime : Float) : Void {
+	override public function prepareSpecialAbilityA() : Void {
 		isDancing = true;
 		speedx = 0;
 		lastDanceTime = 0;
 		setAnimation( danceAnimation );
 		// TODO: start dance animation
 	}
-	override public function useSpecialAbilityA(gameTime : Float) : Void {
-		lastDanceTime = gameTime + 7;
+	override public function useSpecialAbilityA() : Void {
+		lastDanceTime = Scheduler.time() + 7;
 	}
 	
 	/**
@@ -132,14 +133,14 @@ class PlayerBlondie extends Player {
 	var lastRepairTime : Float;
 	var repairing : DestructibleSprite;
 	
-	override public function prepareSpecialAbilityB(gameTime: Float): Void {
+	override public function prepareSpecialAbilityB(): Void {
 		if (repairing == null) {
 			var rect = collisionRect();
-			for (checkSprite in TenUp4.instance.level.destructibleSprites) {
+			for (checkSprite in Level.the.destructibleSprites) {
 				if ( checkSprite != this && checkSprite.isRepairable ) {
 					if ( rect.collision( checkSprite.collisionRect() ) ) {
 						repairing = checkSprite;
-						lastRepairTime = gameTime;
+						lastRepairTime = Scheduler.time();
 						if (lookRight) setAnimation(repairRightAnimation);
 						else setAnimation(repairLeftAnimation);
 						speedx = 0;
@@ -150,9 +151,9 @@ class PlayerBlondie extends Player {
 		}
 	}
 	
-	override public function useSpecialAbilityB(gameTime : Float) : Void {
+	override public function useSpecialAbilityB() : Void {
 		if (repairing != null) {
-			repairing.health += Math.round( repairAmountPerSec * (gameTime - lastRepairTime) );
+			repairing.health += Math.round( repairAmountPerSec * (Scheduler.time() - lastRepairTime) );
 			if (lookRight) setAnimation(standRight);
 			else setAnimation(standLeft);
 			repairing = null;

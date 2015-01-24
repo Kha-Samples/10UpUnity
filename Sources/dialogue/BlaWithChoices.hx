@@ -29,7 +29,6 @@ class BlaWithChoices extends Bla {
 	private function keyUpListener(key:Key, char: String) {
 		var choice = char.fastCodeAt(0) - '1'.fastCodeAt(0);
 		if (choice >= 0 && choice < choices.length) {
-			Cfg.setDlgChoice(txtKey, choice);
 			Keyboard.get().remove(null, keyUpListener);
 			this.finished = true;
 			Dialogue.insert(choices[choice]);

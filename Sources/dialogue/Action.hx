@@ -8,7 +8,6 @@ import kha.Scheduler;
 import kha.Sprite;
 
 enum ActionType {
-	MG;
 	FADE_TO_BLACK;
 	FADE_FROM_BLACK;
 	THROW;
@@ -34,13 +33,11 @@ class Action implements DialogueItem {
 			started = true;
 			counter = 0;
 			switch(type) {
-				case ActionType.MG:
-					Cfg.mafioso.useMg = true;
 				case ActionType.FADE_TO_BLACK:
-					TenUp3.getInstance().renderOverlay = true;
-					counter = TenUp3.getInstance().overlayColor.Ab;
+					TenUp4.the.renderOverlay = true;
+					counter = TenUp4.the.overlayColor.Ab;
 				case ActionType.FADE_FROM_BLACK:
-					counter = TenUp3.getInstance().overlayColor.Ab;
+					counter = TenUp4.the.overlayColor.Ab;
 				case ActionType.THROW:
 					finishThrow = false;
 					var from = sprites[0];
@@ -58,7 +55,7 @@ class Action implements DialogueItem {
 					proj.accx = 0;
 					proj.accy = 0;
 					Scene.the.addProjectile(proj);
-					if (proj == Cfg.broetchen) {
+					/*if (proj == Cfg.broetchen) {
 						cast(from, Player).inventory.loose(Cfg.broetchen);
 						cast(from, Player).inventory.loose(Cfg.broetchen_mehrkorn);
 						var newProj;
@@ -78,30 +75,27 @@ class Action implements DialogueItem {
 							Scene.the.addProjectile(newProj);
 							
 						}, 0.6);
-					}
+					}*/
 			}
 			return;
 		} else {
 			switch(type) {
-				case ActionType.MG:
-					// TODO
-					actionFinished();
 				case ActionType.FADE_TO_BLACK:
 					++counter;
 					++counter;
-					if (!TenUp3.getInstance().renderOverlay || counter >= 256) {
+					if (!TenUp4.the.renderOverlay || counter >= 256) {
 						actionFinished();
 					} else {
-						TenUp3.getInstance().overlayColor.Ab = counter;
+						TenUp4.the.overlayColor.Ab = counter;
 					}
 				case ActionType.FADE_FROM_BLACK:
 					--counter;
 					--counter;
-					if (!TenUp3.getInstance().renderOverlay || counter <= 0) {
-						TenUp3.getInstance().renderOverlay = false;
+					if (!TenUp4.the.renderOverlay || counter <= 0) {
+						TenUp4.the.renderOverlay = false;
 						actionFinished();
 					} else {
-						TenUp3.getInstance().overlayColor.Ab = counter;
+						TenUp4.the.overlayColor.Ab = counter;
 					}
 				case ActionType.THROW:
 					if (finishThrow) {

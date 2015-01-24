@@ -236,13 +236,13 @@
 			"id": "5154a96d-1944-4596-a547-b74c27506e4a",
 			"type": "blob",
 			"file": "Liberation Sans-Regular14.kravur",
-			"name": "Liberation Sans-Regular14"
+			"name": "Liberation Sans14.kravur"
 		},
 		{
 			"id": "e822f78f-dd88-4a84-8f27-fffd2a3bb092",
 			"type": "blob",
 			"file": "Liberation Sans-Regular20.kravur",
-			"name": "Liberation Sans-Regular20"
+			"name": "Liberation Sans20.kravur"
 		},
 		{
 			"id": "94c85123-06e1-44f7-92b0-36b3f7d7eaab",
@@ -261,9 +261,23 @@
 		{
 			"id": "4f6ef48a-79d3-4e3f-a5e2-1490ba1d7190",
 			"name": "start",
-			"neighbours": [],
+			"neighbours": [
+				"4f6ef48a-79d3-4e3f-a5e2-1490ba1d7191"
+			],
 			"assets": [
 				"c659517f-66d8-4dcb-958a-cf727ccb6113",
+				"15b1ea20-4032-11e2-a25f-0800200c9a66",
+				"94c85123-06e1-44f7-92b0-36b3f7d7eaab",
+				"fcd52067-5347-466d-afb8-23c9786d24f4",
+				"5154a96d-1944-4596-a547-b74c27506e4a",
+				"e822f78f-dd88-4a84-8f27-fffd2a3bb092"
+			]
+		},
+		{
+			"id": "4f6ef48a-79d3-4e3f-a5e2-1490ba1d7191",
+			"name": "level-base",
+			"neighbours": [],
+			"assets": [
 				"15b1ea20-4032-11e2-a25f-0800200c9a66",
 				"94c85123-06e1-44f7-92b0-36b3f7d7eaab",
 				"fcd52067-5347-466d-afb8-23c9786d24f4",
@@ -272,32 +286,29 @@
 				"6a84a9a0-0e92-11e3-8ffd-0800200c9a66",
 				"90467ec2-0e92-11e3-8ffd-0800200c9a66",
 				"90467ec3-0e92-11e3-8ffd-0800200c9a66",
-				"6a84a9a1-0e92-11e3-8ffd-0800200c9a66"
+				"6a84a9a1-0e92-11e3-8ffd-0800200c9a66",
+				"2348bd72-d7ce-11e1-9b23-0800200c9a66",
+				"04bf9738-4fe2-4966-8088-70ff042801ed",
+				"1a57efc0-0d8c-11e3-8ffd-0800200c9a66",
+				"503b6505-e1d8-4a2a-98d0-d02d0c353ab3",
+				"f00b98f6-70a7-4217-a6d6-a54965b634c9",
+				"14c3245b-82c0-4693-a131-e6f255c872de",
+				"85290710-0e83-11e3-8ffd-0800200c9a66",
+				"2b620320-0e6b-11e3-8ffd-0800200c9a66",
+				"2a7ceaee-cc08-4ad2-80d5-7839b6f45f1a",
+				"66f588d6-998a-49d5-a7d6-e2a9a747be51",
+				"a7a42c00-d7cc-11e1-9b23-0800200c9a66",
+				"2348bd74-d7ce-11e1-9b23-0800200c9a66",
+				"9c7e09e0-0e5d-11e3-8ffd-0800200c9a66",
+				"2348bd76-d7ce-11e1-9b23-0800200c9a66"
 			]
 		},
 		{
 			"id": "657f6c70-d7ce-11e1-9b23-0800200c9a66",
 			"name": "level1",
-			"parent": "4f6ef48a-79d3-4e3f-a5e2-1490ba1d7190",
+			"parent": "4f6ef48a-79d3-4e3f-a5e2-1490ba1d7191",
 			"neighbours": [],
 			"assets": [
-				"a7a42c00-d7cc-11e1-9b23-0800200c9a66",
-				"2348bd72-d7ce-11e1-9b23-0800200c9a66",
-				"2348bd74-d7ce-11e1-9b23-0800200c9a66",
-				"04bf9738-4fe2-4966-8088-70ff042801ed",
-				"14c3245b-82c0-4693-a131-e6f255c872de",
-				"f00b98f6-70a7-4217-a6d6-a54965b634c9",
-				"66f588d6-998a-49d5-a7d6-e2a9a747be51",
-				"2a7ceaee-cc08-4ad2-80d5-7839b6f45f1a",
-				"1a57efc0-0d8c-11e3-8ffd-0800200c9a66",
-				"9c7e09e0-0e5d-11e3-8ffd-0800200c9a66",
-				"2b620320-0e6b-11e3-8ffd-0800200c9a66",
-				"85290710-0e83-11e3-8ffd-0800200c9a66",
-				"6a84a9a0-0e92-11e3-8ffd-0800200c9a66",
-				"6a84a9a1-0e92-11e3-8ffd-0800200c9a66",
-				"90467ec2-0e92-11e3-8ffd-0800200c9a66",
-				"90467ec3-0e92-11e3-8ffd-0800200c9a66",
-				"503b6505-e1d8-4a2a-98d0-d02d0c353ab3",
 				"2348bd76-d7ce-11e1-9b23-0800200c9a66",
 				"5c950390-d7ce-11e1-9b23-0800200c9a66"
 			]
