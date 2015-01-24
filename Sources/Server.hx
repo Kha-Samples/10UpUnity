@@ -102,6 +102,8 @@ class Server {
 	}
 	
 	public function sendText(text: String): Void {
+		#if js
 		socket.send(Json.stringify( { command: 'speak', text: text } ));
+		#end
 	}
 }
