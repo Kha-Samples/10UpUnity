@@ -5,13 +5,16 @@ import kha.Rectangle;
 import kha.Scheduler;
 
 class PlayerBlondie extends Player {
+	static public var the(default, null) : PlayerBlondie; 
+	
 	private var danceAnimation: Animation;
 	private var repairLeftAnimation: Animation;
 	private var repairRightAnimation: Animation;
 	
 	public function new(x: Float, y: Float) {
 		super(x, y - 8, "mechanic", Std.int(410 / 10) * 2, Std.int(455 / 7) * 2);
-		Player.setPlayer(3, this);
+		mini = kha.Loader.the.getImage("mechanicmini");
+		the = this;
 		repairAmountPerSec = 50;
 		collider = new Rectangle(20, 30, 41 * 2 - 40, (65 - 1) * 2 - 30);
 		walkLeft = Animation.createRange(11, 18, 4);

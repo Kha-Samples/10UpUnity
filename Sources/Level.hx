@@ -35,13 +35,7 @@ class Level {
 			if ( checkVictory() ) {
 				won = true;
 			} else {
-				var alive: Bool = false;
-				for (i in 0...Player.getPlayerCount()) {
-					if (!Player.getPlayer(i).isSleeping()) {
-						alive = true;
-						break;
-					}
-				}
+				var alive: Bool = !(PlayerBullie.the.isSleeping() || PlayerBlondie.the.isSleeping());
 				if (!alive) {
 					TenUp4.the.defeat();
 				}

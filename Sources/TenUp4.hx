@@ -53,10 +53,7 @@ class TenUp4 extends Game {
 	var map : Array<Array<Int>>;
 	var originalmap : Array<Array<Int>>;
 	var highscoreName : String;
-	var shiftPressed : Bool;
 	private var font: Font;
-	
-	private var minis: Array<Image>;
 	
 	public var mouseX: Float;
 	public var mouseY: Float;
@@ -68,21 +65,22 @@ class TenUp4 extends Game {
 	public function new() {
 		super("10Up: Unity", false);
 		the = this;
-		shiftPressed = false;
 		highscoreName = "";
 		mode = Mode.Loading;
-		minis = new Array<Image>();
 	}
 	
 	public override function init(): Void {
 		backbuffer = Image.createRenderTarget(1024, 768);
 		Configuration.setScreen(new LoadingScreen());
-		Player.init();
 		Loader.the.loadRoom("start", initStart);
 		Random.init( Math.round( Sys.getTime() * 1000 ) );
 	}
 	
 	public function initStart(): Void {
+		if (Gamepad.get(0) != null) Gamepad.get(0).notify(axisListener, buttonListener);
+		Keyboard.get().notify(keydown, keyup);
+		Mouse.get().notify(mousedown, mouseup, mousemove, mousewheel);
+		
 		font = Loader.the.loadFont("arial", FontStyle.Default, 34);
 		Localization.init("localizations");
 		
@@ -139,11 +137,6 @@ class TenUp4 extends Game {
 	
 	private function initLevel(levelNumber: Int): Void {
 		Level.the.init();
-		minis = new Array();
-		minis.push(Loader.the.getImage("agentmini"));
-		minis.push(Loader.the.getImage("professormini"));
-		minis.push(Loader.the.getImage("rowdymini"));
-		minis.push(Loader.the.getImage("mechanicmini"));
 		tileColissions = new Array<Tile>();
 		for (i in 0...352) {
 			tileColissions.push(new Tile(i, isCollidable(i)));
@@ -197,10 +190,6 @@ class TenUp4 extends Game {
 				}
 			}
 		}
-		
-		if (Gamepad.get(0) != null) Gamepad.get(0).notify(axisListener, buttonListener);
-		Keyboard.get().notify(keydown, keyup);
-		Mouse.get().notify(mousedown, mouseup, mousemove, mousewheel);
 		
 		for (i in 0...spriteCount) {
 			var sprite : kha.Sprite = null;
@@ -263,8 +252,8 @@ class TenUp4 extends Game {
 		}
 		
 		//music.play();
-		Player.getPlayer(0).setCurrent();
-		//Player.getInstance().reset();
+		
+		PlayerBullie.the.setCurrent();
 		Configuration.setScreen(this);
 		mode = Game;
 		Scene.the.camx = Std.int(width / 2);
@@ -340,10 +329,7 @@ class TenUp4 extends Game {
 			//painter.drawString("Score: " + Std.string(Player.getInstance().getScore()), 20, 25);
 			//painter.drawString("Round: " + Std.string(Player.getInstance().getRound()), width - 100, 25);
 			
-			drawPlayerInfo(g, 0, 20, 700, Color.fromBytes(255, 0, 0));
-			drawPlayerInfo(g, 1, 80, 700, Color.fromBytes(0, 255, 0));
-			drawPlayerInfo(g, 2, 140, 700, Color.fromBytes(0, 0, 255));
-			drawPlayerInfo(g, 3, 200, 700, Color.fromBytes(255, 255, 0));
+			drawPlayerInfo(g, 20, 700, Color.fromBytes(255, 0, 0));
 		case Loading, StartScreen, BlaBlaBla:
 			scene.render(g);
 		}
@@ -360,30 +346,29 @@ class TenUp4 extends Game {
 	}
 	
 	@:access(Player) 
-	private function drawPlayerInfo(g: Graphics, index: Int, x: Float, y: Float, color: Color): Void {
-		if (Player.getPlayerIndex() == index) {
-			g.color = Color.White;
-			
-			g.font = font;
-			//painter.fillRect(0, y - 30, 1024, 5);
-			g.drawString("Left Mouse", 600, y - 25);
-			//painter.fillRect(0, y + 20, 1024, 5);
-			g.drawString(Player.current().leftButton(), 620, y + 25);
-			g.drawString("Right Mouse", 800, y - 25);
-			g.drawString(Player.current().rightButton(), 820, y + 25);
-			
-			//painter.fillRect(x - 5, y - 5, 50, 50);
-			g.fillRect(x - 10, y - 25, 50, 10);
-			g.fillRect(x - 10, y - 25, 10, 90);
-			g.fillRect(x + 40, y - 25, 10, 90);
-			g.fillRect(x - 10, y - 25 + 80, 50, 10);
-		}
+	private function drawPlayerInfo(g: Graphics, x: Float, y: Float, color: Color): Void {
 		g.color = Color.White;
-		g.drawImage(minis[index], x, y - 20);
+		
+		g.font = font;
+		//painter.fillRect(0, y - 30, 1024, 5);
+		g.drawString("Left Mouse", 600, y - 25);
+		//painter.fillRect(0, y + 20, 1024, 5);
+		g.drawString(Player.current().leftButton(), 620, y + 25);
+		g.drawString("Right Mouse", 800, y - 25);
+		g.drawString(Player.current().rightButton(), 820, y + 25);
+		
+		//painter.fillRect(x - 5, y - 5, 50, 50);
+		g.fillRect(x - 10, y - 25, 50, 10);
+		g.fillRect(x - 10, y - 25, 10, 90);
+		g.fillRect(x + 40, y - 25, 10, 90);
+		g.fillRect(x - 10, y - 25 + 80, 50, 10);
+		
+		g.color = Color.White;
+		g.drawImage(Player.current().mini, x, y - 20);
 		g.color = Color.fromBytes(50, 50, 50);
 		g.fillRect(x, y + 45, 40, 10);
 		g.color = Color.fromBytes(150, 0, 0);
-		var healthBar = 40 * Player.getPlayer(index).health / Player.getPlayer(index).maxHealth;
+		var healthBar = 40 * Player.current().health / Player.current().maxHealth;
 		if (healthBar < 0) healthBar = 0;
 		g.fillRect(x, y + 35, healthBar, 10);
 		g.color = Color.Black;
@@ -392,7 +377,7 @@ class TenUp4 extends Game {
 		//g.fillRect(x, y + 45, Player.getPlayer(index).timeLeft() * 4, 10);
 	}
 	
-	private function axisListener(axis: Int, value: Float): Void {
+	function axisListener(axis: Int, value: Float): Void {
 		switch (axis) {
 			case 0:
 				if (value < -0.2) {
@@ -410,7 +395,7 @@ class TenUp4 extends Game {
 		}
 	}
 	
-	private function buttonListener(button: Int, value: Float): Void {
+	function buttonListener(button: Int, value: Float): Void {
 		switch (button) {
 			case 0, 1, 2, 3:
 				if (value > 0.5) keydown(Key.UP, null);
@@ -447,9 +432,7 @@ class TenUp4 extends Game {
 		}
 	}
 	
-	public function keydown(key: Key, char: String) : Void {
-		if (key == Key.SHIFT) shiftPressed = true;
-		
+	function keydown(key: Key, char: String) : Void {
 		if (mode == Mode.Game) {
 			switch (key) {
 			case Key.CTRL:
@@ -477,29 +460,44 @@ class TenUp4 extends Game {
 		}
 	}
 	
-	public function keyup(key : Key, char : String) : Void {
-		if (key == Key.SHIFT) shiftPressed = false;
-		switch (key) {
-		case Key.ESC:
-			Dialogues.escMenu();
-		case Key.CTRL:
-			Player.current().up = false;
-		case Key.CHAR:
-			switch (char) {
-			case 'a', 'A':
-				keyup(Key.LEFT, null);
-			case 'd', 'D':
-				keyup(Key.RIGHT, null);
-			case 'w', 'W':
-				keyup(Key.UP, null);
-			}
-		case Key.LEFT:
-			Player.current().left = false;
-		case Key.RIGHT:
-			Player.current().right = false;
-		case Key.UP:
-			Player.current().up = false;
-		default:
+	function keyup(key : Key, char : String) : Void {
+		switch (mode) {
+			case Game:
+				switch (key) {
+				case Key.ESC:
+					Dialogues.escMenu();
+				case Key.CTRL:
+					Player.current().up = false;
+				case Key.CHAR:
+					switch (char) {
+					case 'a', 'A':
+						keyup(Key.LEFT, null);
+					case 'd', 'D':
+						keyup(Key.RIGHT, null);
+					case 'w', 'W':
+						keyup(Key.UP, null);
+					}
+				case Key.LEFT:
+					Player.current().left = false;
+				case Key.RIGHT:
+					Player.current().right = false;
+				case Key.UP:
+					Player.current().up = false;
+				default:
+				}
+			case StartScreen:
+				switch (key) {
+				case Key.ESC:
+					Dialogues.escMenu();
+				default:
+					enterLevel(1); // TODO: connect to server
+				}
+			default:
+				switch (key) {
+				case Key.ESC:
+					Dialogues.escMenu();
+				default:
+				}
 		}
 	}
 	
@@ -508,7 +506,11 @@ class TenUp4 extends Game {
 		mouseY = screenMouseY + Scene.the.screenOffsetY;
 	}
 	
-	public function mousedown(button: Int, x: Int, y: Int): Void {
+	function mousedown(button: Int, x: Int, y: Int): Void {
+		screenMouseX = x;
+		screenMouseY = y;
+		updateMouse();
+		
 		switch(mode) {
 		case Game:
 			if (mouseUpAction == null) {
@@ -527,12 +529,14 @@ class TenUp4 extends Game {
 	
 	private var mouseUpAction : Void->Void;
 	public var advanceDialogue: Bool = false;
-	public function mouseup(button: Int, x: Int, y: Int): Void {
+	function mouseup(button: Int, x: Int, y: Int): Void {
 		screenMouseX = x;
 		screenMouseY = y;
 		updateMouse();
 		
 		switch (mode) {
+		case StartScreen:
+			enterLevel(1); // TODO: connect to server
 		case BlaBlaBla:
 			advanceDialogue = true;
 		case Game:
@@ -544,12 +548,12 @@ class TenUp4 extends Game {
 		}
 	}
 	
-	public function mousemove(x: Int, y: Int): Void {
+	function mousemove(x: Int, y: Int): Void {
 		screenMouseX = x;
 		screenMouseY = y;
 		updateMouse();
 	}
 	
-	public function mousewheel(delta: Int): Void {
+	function mousewheel(delta: Int): Void {
 	}
 }

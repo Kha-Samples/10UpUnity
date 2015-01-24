@@ -36,9 +36,9 @@ class Player extends DestructibleSprite {
 	var jumpRight : Animation;
 	var score : Int;
 	var round : Int;
+	public var mini : Image;
 	private var hitSound: Sound;
 	private static var currentPlayer: Player = null;
-	private static var jumpmans: Array<Player>;
 	
 	var muzzlePoint : Vector2;
 	
@@ -69,31 +69,7 @@ class Player extends DestructibleSprite {
 		zzzzz = Loader.the.getImage("zzzzz");
 	}
 	
-	public static function init(): Void {
-		jumpmans = new Array<Player>();
-	}
-	
-	public static function getPlayerCount(): Int {
-		return jumpmans.length;
-	}
-	
-	public static function getPlayer(index: Int): Player {
-		return jumpmans[index];
-	}
-	
-	public static function getPlayerIndex(): Int {
-		for (i in 0...4) {
-			if (jumpmans[i] == currentPlayer) return i;
-		}
-		return -1;
-	}
-	
-	public static function setPlayer(index: Int, jumpman: Player): Void {
-		jumpmans[index] = jumpman;
-		jumpman.index = index;
-	}
-	
-	public static function current(): Player {
+	public static inline function current(): Player {
 		return currentPlayer;
 	}
 	

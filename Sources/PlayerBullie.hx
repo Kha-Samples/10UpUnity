@@ -7,9 +7,12 @@ import kha.Sprite;
 import projectiles.FistOfDoom;
 
 class PlayerBullie extends Player {
+	static public var the(default, null) : PlayerBullie; 
+	
 	public function new(x: Float, y: Float) {
 		super(x, y - 8, "rowdy", Std.int(410 / 10) * 2, Std.int(455 / 7) * 2, 100);
-		Player.setPlayer(2, this);
+		mini = kha.Loader.the.getImage("rowdymini");
+		the = this;
 		_health = 100;
 		baseSpeed = 3.0;
 		

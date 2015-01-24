@@ -21,8 +21,7 @@ class Cfg
 		var data = Storage.defaultFile().readObject();
 		if (data == null) the = new Cfg();
 		else the = cast data;
-		
-		Player.init();
+		// TODO: new PlayerBullie?
 	}
 	
 	static public function save(): Void {
