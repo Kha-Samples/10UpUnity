@@ -34,6 +34,7 @@ class Server {
 		socket.onopen = function (value: Dynamic) {
 			trace('connected');
 			connected = true;
+			socket.send(Json.stringify({ command: 'language', language: Cfg.language }));
 		};
 		socket.onmessage = function (value: Dynamic) {
 			var data: Dynamic = Json.parse(value.data);
