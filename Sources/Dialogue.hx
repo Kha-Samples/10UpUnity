@@ -12,7 +12,6 @@ interface DialogueItem {
 class Dialogue {
 	private static var items: Array<DialogueItem>;
 	private static var index: Int = -1;
-	private static var lastMode: Mode;
 	public static var isActionActive(default, null): Bool = false;
 	public static var blaBox: BlaBox;
 	
@@ -27,8 +26,6 @@ class Dialogue {
 		}
 		Dialogue.items = items;
 		index = -1;
-		lastMode = TenUp4.the.mode;
-		TenUp4.the.mode = Mode.BlaBlaBla; // TODO: allow non freezing dialogues!
 		kha.Sys.mouse.hide();
 		next();
 	}
@@ -80,8 +77,6 @@ class Dialogue {
 		blaBox = null;
 		
 		if (index >= items.length) {
-			TenUp4.the.mode = lastMode;
-			lastMode = null;
 			items = null;
 			index = -1;
 			return;

@@ -84,8 +84,6 @@ class TenUp4 extends Game {
 		font = Loader.the.loadFont("arial", FontStyle.Default, 34);
 		Localization.init("localizations");
 		
-		mode = StartScreen;
-		
 		Cfg.init();
 		if (Cfg.language == null) {
 			Configuration.setScreen(this);
@@ -109,6 +107,8 @@ class TenUp4 extends Game {
 
 	@:access(BlaBox) 
 	function initTitleScreen() {
+		mode = StartScreen;
+		
 		Localization.language = Cfg.language;
 		Localization.buildKeys("../Assets/text.xml","text");
 		
