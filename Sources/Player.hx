@@ -296,10 +296,17 @@ class Player extends DestructibleSprite {
 	override public function render(g: Graphics): Void {
 		if (isSleeping()) {
 			g.color = Color.White;
-			//painter.drawImage2(image, 0, 0, width, height, x, y, width, height, rotation);
 			g.pushTransformation(g.transformation * Matrix3.translation(x + originX, y + originY) * Matrix3.rotation(angle) * Matrix3.translation(-x - originX, -y - originY));
-			g.drawScaledSubImage(image, 0, 0, width, height, x-collider.x, y-collider.y, width, height);
+			g.drawScaledSubImage(image, 0, 0, width, height, x + collider.y * scaleY, y - collider.x * scaleX, width, height);
+		#if debug
+			g.color = Color.Red;
+			g.drawRect(x + collider.y * scaleY, y - collider.x * scaleX, width, height);
+		#end
 			g.popTransformation();
+		#if debug
+			g.color = Color.Green;
+			g.drawRect(tempcollider.x, tempcollider.y, tempcollider.width, tempcollider.height);
+		#end
 			g.drawScaledSubImage(zzzzz, (Std.int(zzzzzIndex / 8) % 3) * zzzzz.width / 3, 0, zzzzz.width / 3, zzzzz.height, x + zzzzzXDif(), y - 15 - collider.height, zzzzz.width / 3, zzzzz.height);
 		}
 		else {
