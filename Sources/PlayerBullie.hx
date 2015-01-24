@@ -4,10 +4,15 @@ import kha.Animation;
 import kha.Rectangle;
 import kha.Scene;
 import kha.Sprite;
+import localization.Keys_text;
 import projectiles.FistOfDoom;
 
 class PlayerBullie extends Player {
 	static public var the(default, null) : PlayerBullie; 
+	
+	override public function getName(): String {
+		return "Mr. B";
+	}
 	
 	public function new(x: Float, y: Float) {
 		super(1, x, y - 8, "rowdy", Std.int(410 / 10) * 2, Std.int(455 / 7) * 2, 100);
@@ -59,11 +64,11 @@ class PlayerBullie extends Player {
 	}
 	
 	override public function leftButton(): String {
-		return "Punch";
+		return Localization.getText(Keys_text.ABILITY_PUNCH);
 	}
 	
 	override public function rightButton(): String {
-		return "Lift";
+		return Localization.getText(Keys_text.ABILITY_LIFT);
 	}
 	
 	/**

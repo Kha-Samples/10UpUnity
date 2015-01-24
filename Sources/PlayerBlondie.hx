@@ -3,6 +3,7 @@ package;
 import kha.Animation;
 import kha.Rectangle;
 import kha.Scheduler;
+import localization.Keys_text;
 
 class PlayerBlondie extends Player {
 	static public var the(default, null) : PlayerBlondie; 
@@ -10,6 +11,10 @@ class PlayerBlondie extends Player {
 	private var danceAnimation: Animation;
 	private var repairLeftAnimation: Animation;
 	private var repairRightAnimation: Animation;
+	
+	override public function getName(): String {
+		return "Ms. M";
+	}
 	
 	public function new(x: Float, y: Float) {
 		super(0, x, y - 8, "mechanic", Std.int(410 / 10) * 2, Std.int(455 / 7) * 2);
@@ -68,11 +73,11 @@ class PlayerBlondie extends Player {
 	}
 	
 	override public function leftButton(): String {
-		return "Dance";
+		return Localization.getText(Keys_text.ABILITY_DANCE);
 	}
 	
 	override public function rightButton(): String {
-		return "Repair";
+		return Localization.getText(Keys_text.ABILITY_REPAIR);
 	}
 	
 	override public function update() {

@@ -34,8 +34,6 @@ class Player extends DestructibleSprite {
 	var standRight : Animation;
 	var jumpLeft : Animation;
 	var jumpRight : Animation;
-	var score : Int;
-	var round : Int;
 	public var mini : Image;
 	private var hitSound: Sound;
 	private static var currentPlayer: Player = null;
@@ -57,8 +55,6 @@ class Player extends DestructibleSprite {
 		jumpRight = Animation.create(0);
 		setAnimation(jumpRight);
 		collider = null;
-		score = 0;
-		round = 1;
 		up = false;
 		right = false;
 		left = false;
@@ -85,22 +81,6 @@ class Player extends DestructibleSprite {
 		setAnimation(jumpRight);
 	}
 	
-	public function selectCoin() {
-		score += 50;
-	}
-	
-	public function getScore() : Int {
-		return score;
-	}
-	
-	public function getRound() : Int {
-		return round;
-	}
-	
-	public function nextRound() {
-		++round;
-	}
-	
 	private var baseSpeed = 4.0;
 	public override function update(): Void {
 		walking = false;
@@ -113,7 +93,7 @@ class Player extends DestructibleSprite {
 					setAnimation(walkRight);
 					walking = true;
 				}
-				speedx = baseSpeed * Math.round(Math.pow(1.1, getRound()));
+				speedx = baseSpeed;
 				lookRight = true;
 			}
 			else if (left) {
@@ -121,7 +101,7 @@ class Player extends DestructibleSprite {
 					setAnimation(walkLeft);
 					walking = true;
 				}
-				speedx = -baseSpeed * Math.round(Math.pow(1.1, getRound()));
+				speedx = -baseSpeed;
 				lookRight = false;
 			}
 			else {
@@ -182,6 +162,10 @@ class Player extends DestructibleSprite {
 		if (lookRight) setAnimation(standRight);
 		else setAnimation(standLeft);
 		killed = false;
+	}
+	
+	public function getName(): String {
+		return "Anonymous";
 	}
 	
 	public function leftButton(): String {
