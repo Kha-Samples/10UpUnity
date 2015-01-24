@@ -24,6 +24,10 @@ class BlaBox {
 	public function new(text: String, speaker: Sprite = null) {
 		this.speaker = speaker;
 		setText(text);
+		
+		if (speaker != null && speaker == Player.current()) {
+			Server.the.sendText(text);
+		}
 	}
 	
 	public function pointAt(sprite: Sprite): Void {

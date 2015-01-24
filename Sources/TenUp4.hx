@@ -329,14 +329,16 @@ class TenUp4 extends Game {
 			scene.render(g);
 			g.transformation = Matrix3.identity();
 			g.color = Color.Black;
-			for (door in Level.the.doors) {
-				var doorX = door.x + 0.5 * door.width;
-				var doorXscreen = doorX - scene.screenOffsetX; 
-				if (!door.opened && door.health > 0 && doorXscreen > 0 && doorXscreen < width) {
-					if (door.x < Player.current().x) {
-						g.fillRect(0, 0, doorXscreen, height);
-					} else {
-						g.fillRect(doorXscreen, 0, width - doorXscreen, height);
+			if (Level.the != null) {
+				for (door in Level.the.doors) {
+					var doorX = door.x + 0.5 * door.width;
+					var doorXscreen = doorX - scene.screenOffsetX; 
+					if (!door.opened && door.health > 0 && doorXscreen > 0 && doorXscreen < width) {
+						if (door.x < Player.current().x) {
+							g.fillRect(0, 0, doorXscreen, height);
+						} else {
+							g.fillRect(doorXscreen, 0, width - doorXscreen, height);
+						}
 					}
 				}
 			}
@@ -531,6 +533,7 @@ class TenUp4 extends Game {
 					enterLevel(1); // TODO: connect to server
 				}
 			case BlaBlaBla:
+				if (Player.current() == null) return;
 				switch (key) {
 				case Key.ESC:
 					playerChatStr = "";

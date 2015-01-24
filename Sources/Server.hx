@@ -29,6 +29,7 @@ class Server {
 	
 	private function new() {
 		#if js
+		//socket = new WebSocket('ws://10upunityserver.robdangero.us'); 
 		socket = new WebSocket('ws://127.0.0.1:8789');
 		socket.onopen = function (value: Dynamic) {
 			trace('connected');
@@ -62,6 +63,10 @@ class Server {
 							}
 						}
 					}
+				case 'speak':
+					var player: Player = PlayerBlondie.the;
+					if (player == Player.current()) player = PlayerBullie.the;
+					BlaBox.boxes.push(new BlaBox(data.text, player));
 			}
 		};
 		#end
@@ -94,5 +99,9 @@ class Server {
 			players[player] = data;
 		}
 		#end
+	}
+	
+	public function sendText(text: String): Void {
+		socket.send(Json.stringify( { command: 'speak', text: text } ));
 	}
 }

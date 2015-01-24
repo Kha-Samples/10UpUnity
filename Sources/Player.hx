@@ -89,30 +89,42 @@ class Player extends DestructibleSprite {
 	private var baseSpeed = 4.0;
 	public override function update(): Void {
 		if (!ataimx) {
-			if (aimx < x) {
-				left = true;
-				right = false;
-			}
-			else if (aimx > x) {
-				right = true;
-				left = false;
+			if (isSleeping()) {
+				x = aimx;
+				ataimx = true;
 			}
 			else {
-				left = false;
-				right = false;
-				ataimx = true;
+				if (aimx < x) {
+					left = true;
+					right = false;
+				}
+				else if (aimx > x) {
+					right = true;
+					left = false;
+				}
+				else {
+					left = false;
+					right = false;
+					ataimx = true;
+				}
 			}
 		}
 		if (!ataimy) {
-			if (aimy < y) {
-				setUp();
-			}
-			else if (aimy > y) {
-				up = false;
+			if (isSleeping()) {
+				y = aimy;
+				ataimy = true;
 			}
 			else {
-				up = false;
-				ataimy = true;
+				if (aimy < y) {
+					setUp();
+				}
+				else if (aimy > y) {
+					up = false;
+				}
+				else {
+					up = false;
+					ataimy = true;
+				}
 			}
 		}
 		
