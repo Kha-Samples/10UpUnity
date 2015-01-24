@@ -107,4 +107,16 @@ class Server {
 		socket.send(Json.stringify( { command: 'speak', text: text } ));
 		#end
 	}
+	
+	public function changeDoorOpened(id: Int, opened: Bool): Void {
+		#if js
+		socket.send(Json.stringify( { command: 'doorSetOpened', opened: opened, id: id } ));
+		#end
+	}
+	
+	public function changeDoorHealth(id: Int, health: Int): Void {
+		#if js
+		socket.send(Json.stringify( { command: 'doorSetHealth', health: health, id: id } ));
+		#end
+	}
 }

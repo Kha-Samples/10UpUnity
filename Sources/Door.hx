@@ -11,8 +11,9 @@ class Door extends DestructibleSprite {
 	private var closedAnim: Animation;
 	private var crackedAnim: Animation;
 	private var destroyedAnim: Animation;
+	private var id: Int;
 	
-	public function new(x: Int, y: Int) {
+	public function new(id: Int, x: Int, y: Int) {
 		super(100, Loader.the.getImage("door"), 32 * 2, 64 * 2, 0);
 		this.x = x;
 		this.y = y;
@@ -30,6 +31,7 @@ class Door extends DestructibleSprite {
 		if (opened == value) {
 			return opened;
 		}
+		Server.the.changeDoorOpened(id, value);
 		if ( opened = value ) {
 			setAnimation(openAnim);
 		} else {
@@ -46,6 +48,7 @@ class Door extends DestructibleSprite {
 	}
 	
 	override private function set_health(value:Int):Int {
+		if (value != _health) Server.the.changeDoorHealth(id, value);
 		if (opened) return _health;
 		
 		if ( value <= 0 ) {
