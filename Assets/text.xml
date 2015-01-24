@@ -25,6 +25,21 @@
 	<en>Click to start</en>
 </click_to_start>
 
+<start_as_mechanic>
+	<de>Ouch. Mein Kopf.
+Was ist passiert? - Ah, eine leere 10UP Dose. Wenn ich mich doch nur an meinen Auftrag erinnern könnte?</de>
+</start_as_mechanic>
+<start_as_bully_1>
+	<de>Habt ihr mich verstanden!?!
+Ihr bekommt mich nicht in ein Flugzeug!</de>
+</start_as_bully_1>
+<start_as_bully_2>
+	<de>Huh? Wo sind denn alle?</de>
+</start_as_bully_2>
+<start_as_bully_3>
+	<de>Ah! Eine leere 10UP Dose.
+Das heißt ich muss hier irgendwo etwas kurz und klein Schlagen.</de>
+</start_as_bully_3>
 
 <!-- Abilities -->
 <ability_Punch>
