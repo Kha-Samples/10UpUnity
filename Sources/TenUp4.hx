@@ -296,7 +296,7 @@ class TenUp4 extends Game {
 		updateMouse();
 		var player = Player.current();
 		if (player != null) {
-			//Scene.the.camx = Std.int(player.x) + Std.int(player.width / 2);
+			Scene.the.camx = Std.int(player.x) + Std.int(player.width / 2); // TODO: block view with closed dors
 			Scene.the.camy = Std.int(player.y + player.height + 80 - 0.5 * height);
 		}
 		if (advanceDialogue) {
