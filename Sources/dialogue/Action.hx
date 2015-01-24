@@ -102,9 +102,9 @@ class Action implements DialogueItem {
 					}
 				case ActionType.AWAKE:
 					++counter;
-					if (counter == 30) {
+					if (counter == 60) {
 						cast(sprites[0], Player).unsleep();
-					} else if (counter == 50) {
+					} else if (counter == 90) {
 						actionFinished();
 					}
 				case ActionType.THROW:
