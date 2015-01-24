@@ -20,7 +20,7 @@ class Cfg
 	static public function init() {
 		var data = null;
 		try {
-			Storage.defaultFile().readObject();
+			data = Storage.defaultFile().readObject();
 		}
 		catch (e: Dynamic) {
 			
