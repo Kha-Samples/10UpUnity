@@ -342,8 +342,12 @@ class TenUp4 extends Game {
 			g.color = overlayColor;
 			g.fillRect(0, 0, width, height);
 		}
+		
 		g.transformation = Matrix3.identity();
-		BlaBox.render(g);
+		for (box in BlaBox.boxes) {
+			g.color = Color.White;
+			box.render(g);
+		}
 		g.end();
 		
 		frame.g2.begin();

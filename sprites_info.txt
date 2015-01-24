@@ -1,0 +1,20 @@
+Num	Desc
+0	Mr. A (Agent)
+1	Mr. P (Professor)
+2	Ms. M (Mechanic)
+3	Mr. B (Bully)
+4	Door (Wooden)
+7	Lift Button (to call the lift from a floor)
+8	Lift Door (with open/close animation)
+9	Lift cabin
+5	Toilet wall (destructable, with the water for the toilet-flush, destructable, at least one broken)
+6	Mirror (destructable!)
+
+
+Following sprites would be nice to have to place randomly in the living room
+Couch
+Table
+Lamp 1-3
+Man
+Woman
+PC

@@ -13,7 +13,8 @@ class Dialogue {
 	private static var items: Array<DialogueItem>;
 	private static var index: Int = -1;
 	private static var lastMode: Mode;
-	public static var isActionActive(default,null): Bool = false;
+	public static var isActionActive(default, null): Bool = false;
+	public static var blaBox: BlaBox;
 	
 	public static function set(items: Array<DialogueItem>): Void {
 		if (items == null || items.length <= 0) {
@@ -75,8 +76,8 @@ class Dialogue {
 		}
 		
 		++index;
-		BlaBox.pointAt(null);
-		BlaBox.setText(null);
+		BlaBox.boxes.remove(blaBox);
+		blaBox = null;
 		
 		if (index >= items.length) {
 			TenUp4.the.mode = lastMode;

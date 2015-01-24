@@ -15,7 +15,7 @@ class Bla implements DialogueItem {
 	}
 	
 	public function execute() : Void {
-		BlaBox.pointAt(speaker);
-		BlaBox.setText(text);
+		Dialogue.blaBox = new BlaBox(text, speaker);
+		BlaBox.boxes.push(Dialogue.blaBox);
 	}
 }

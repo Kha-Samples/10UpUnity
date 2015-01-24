@@ -9,23 +9,30 @@ import kha.Scene;
 import kha.Sprite;
 
 class BlaBox {
-	private static var padding = 15;
-	private static var maxWidth = 500;
-	private static var width : Float;
-	private static var height : Float;
-	private static var pointed: Sprite;
-	private static var font: Font;
-	private static var text: Array<String> = null;
+	static private var padding = 15;
+	static private var maxWidth = 500;
+	static public var boxes(default, null) : Array<BlaBox> = new Array();
+	private var width : Float;
+	private var height : Float;
+	private var speaker: Sprite;
+	private var font: Font;
+	private var text: Array<String> = null;
+	public var isThought = false;
 	
-	public static function pointAt(sprite: Sprite): Void {
-		pointed = sprite;
+	public function new(text: String, speaker: Sprite = null) {
+		this.speaker = speaker;
+		setText(text);
 	}
 	
-	public static function setText(text: String): Void {
+	public function pointAt(sprite: Sprite): Void {
+		speaker = sprite;
+	}
+	
+	public function setText(text: String): Void {
 		if (text != null) {
 			if (font == null) font = Loader.the.loadFont("Liberation Sans", new FontStyle(false, false, false), 20);
 			var maxWidth = BlaBox.maxWidth - 2 * padding;
-			BlaBox.text = new Array();
+			this.text = new Array();
 			width = 200;
 			height = 50;
 			text = Localization.getText(text);
@@ -44,34 +51,34 @@ class BlaBox {
 							line += " " + nextWord;
 							nextWord = words.pop();
 						}
-						BlaBox.text.push(line);
+						this.text.push(line);
 						if (nextWord != null) {
 							words.push(nextWord);
 						}
 					}
 				} else {
 					width = Math.max(width, tw);
-					BlaBox.text.push(line);
+					this.text.push(line);
 				}
 			}
 			width += 2 * padding;
-			height = (font.getHeight() * BlaBox.text.length) + 2 * padding;
+			height = (font.getHeight() * this.text.length) + 2 * padding;
 		} else {
-			BlaBox.text = null;
+			this.text = null;
 		}
 	}
 	
-	public static function render(g: Graphics): Void {
+	public function render(g: Graphics): Void {
 		if (text == null) return;
 		
 		var sx : Float = -1;
 		var sy : Float = -1;
-		if (pointed != null) {
-			sx = pointed.x + (0.5 * pointed.collisionRect().width) - Scene.the.screenOffsetX;
-			sy = pointed.y - 15 - Scene.the.screenOffsetY;
+		if (speaker != null) {
+			sx = speaker.x + (0.5 * speaker.collisionRect().width) - Scene.the.screenOffsetX;
+			sy = speaker.y - 15 - Scene.the.screenOffsetY;
 		}
 		
-		var x : Float = (pointed == null) ? (0.5 * (kha.Game.the.width - width)) : sx - 0.3 * width;
+		var x : Float = (speaker == null) ? (0.5 * (kha.Game.the.width - width)) : sx - 0.3 * width;
 		
 		if (x + width > kha.Game.the.width) {
 			x -= 30 + x + width - kha.Game.the.width;
@@ -80,9 +87,9 @@ class BlaBox {
 			x = 30;
 		}
 		
-		var y : Float = (pointed == null) ? (0.3 * (kha.Game.the.height - height)) : sy - 30 - height;
+		var y : Float = (speaker == null) ? (0.3 * (kha.Game.the.height - height)) : sy - 30 - height;
 		if (y < 0) {
-			sy += pointed.height + 15;
+			sy += speaker.height + 15;
 			y = sy + 30;
 		}
 		
@@ -91,7 +98,7 @@ class BlaBox {
 		g.color = Color.Black;
 		g.drawRect(x, y, width, height, 5);
 		g.color = Color.White;
-		if (pointed != null) {
+		if (speaker != null) {
 			if (sy < y) {
 				g.fillTriangle(sx - 10, y + 0.5 * padding, sx + 10, y + 0.5 * padding, sx, sy);
 				g.color = Color.Black;
