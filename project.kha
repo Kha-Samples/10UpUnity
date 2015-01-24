@@ -255,6 +255,24 @@
 			"type": "blob",
 			"file": "text.xml",
 			"name": "text"
+		},
+		{
+			"id": "582df776-1c75-4e76-92a7-dd792d8e5f80",
+			"type": "image",
+			"file": "elevator.png",
+			"name": "elevator"
+		},
+		{
+			"id": "c3272461-50a9-4f4a-9e29-dd715012b888",
+			"type": "image",
+			"file": "elevatorbuttons.png",
+			"name": "elevatorbuttons"
+		},
+		{
+			"id": "27e7e4f7-1b55-47d9-98d2-86124eb22d24",
+			"type": "image",
+			"file": "toiletwall.png",
+			"name": "toiletwall"
 		}
 	],
 	"rooms": [
@@ -300,7 +318,10 @@
 				"a7a42c00-d7cc-11e1-9b23-0800200c9a66",
 				"2348bd74-d7ce-11e1-9b23-0800200c9a66",
 				"9c7e09e0-0e5d-11e3-8ffd-0800200c9a66",
-				"2348bd76-d7ce-11e1-9b23-0800200c9a66"
+				"2348bd76-d7ce-11e1-9b23-0800200c9a66",
+				"582df776-1c75-4e76-92a7-dd792d8e5f80",
+				"c3272461-50a9-4f4a-9e29-dd715012b888",
+				"27e7e4f7-1b55-47d9-98d2-86124eb22d24"
 			]
 		},
 		{

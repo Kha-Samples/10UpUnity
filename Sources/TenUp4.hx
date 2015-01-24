@@ -207,16 +207,15 @@ class TenUp4 extends Game {
 				Level.the.persons.push(cast sprite);
 				Scene.the.addHero(sprite);
 			case 2:
-				
+				//klowand
 			case 3:
-				
+				//aufzugstür
 			case 4:
+				//aufzugknopf
+			case 5:
 				sprite = new Door(sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
 				Level.the.doors.push( cast sprite );
 				Scene.the.addOther(sprite);
-			case 5:
-				/*sprite = new Enemy(sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
-				Scene.the.addEnemy(sprite);*/
 			case 6:
 				sprite = new Window(sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
 				Scene.the.addOther(sprite);
