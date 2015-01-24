@@ -6,6 +6,12 @@ import haxe.Json;
 import js.html.WebSocket;
 #end
 
+class PlayerData {
+	public function new() { }
+	public var lastX: Float;
+	public var lastY: Float;
+}
+
 class Server {
 	public static var the(get, null): Server;
 	
@@ -44,8 +50,9 @@ class Server {
 						if (Std.is(person, Player)) {
 							var player: Player = cast person;
 							if (player.id == data.id) {
-								player.x = data.x;
-								player.y = data.y;
+								player.aimx = data.x;
+								player.aimy = data.y;
+								player.ataim = false;
 								break;
 							}
 						}
@@ -61,10 +68,27 @@ class Server {
 		#end
 	}
 	
+	private var players: Map<Player, PlayerData> = new Map();
+	
 	public function updatePlayer(player: Player): Void {
 		#if js
 		if (!connected) return;
-		socket.send(Json.stringify( { command: 'move', id: player.id, x: player.x, y: player.y } ));
+		if (players.exists(player)) {
+			var old = players[player];
+			//if (Math.abs(player.x - old.lastX) > 100) {
+			if (player.x != old.lastX) {
+				socket.send(Json.stringify( { command: 'move', id: player.id, x: player.x, y: player.y } ));
+				old.lastX = player.x;
+				old.lastY = player.y;
+			}
+		}
+		else {
+			socket.send(Json.stringify( { command: 'move', id: player.id, x: player.x, y: player.y } ));
+			var data = new PlayerData();
+			data.lastX = player.x;
+			data.lastY = player.y;
+			players[player] = data;
+		}
 		#end
 	}
 }

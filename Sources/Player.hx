@@ -37,7 +37,11 @@ class Player extends DestructibleSprite {
 	public var mini : Image;
 	private var hitSound: Sound;
 	private static var currentPlayer: Player = null;
+	
 	public var id: Int;
+	public var aimx: Float;
+	public var aimy: Float;
+	public var ataim: Bool = true;
 	
 	var muzzlePoint : Vector2;
 	
@@ -83,6 +87,22 @@ class Player extends DestructibleSprite {
 	
 	private var baseSpeed = 4.0;
 	public override function update(): Void {
+		if (!ataim) {
+			if (aimx < x) {
+				left = true;
+				right = false;
+			}
+			else if (aimx > x) {
+				right = true;
+				left = false;
+			}
+			else {
+				left = false;
+				right = false;
+				ataim = true;
+			}
+		}
+		
 		walking = false;
 		if (lastupcount > 0) --lastupcount;
 		if (killed) {
@@ -122,6 +142,21 @@ class Player extends DestructibleSprite {
 		super.update();
 		if (Player.currentPlayer == this) {
 			updateCrosshair();
+		}
+		
+		if (!ataim) {
+			if (left && x <= aimx) {
+				ataim = true;
+				left = false;
+				right = false;
+				x = aimx;
+			}
+			if (right && x >= aimx) {
+				ataim = true;
+				left = false;
+				right = false;
+				x = aimx;
+			}
 		}
 	}
 	
