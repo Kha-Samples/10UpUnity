@@ -20,6 +20,11 @@
 	<en>Blupp the Cruel</en>
 </Fischmensch>
 
+<click_to_start>
+	<de>Klicke zum Starten</de>
+	<en>Click to start</en>
+</click_to_start>
+
 
 <!-- Abilities -->
 <ability_Punch>

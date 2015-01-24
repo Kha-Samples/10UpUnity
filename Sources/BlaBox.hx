@@ -9,15 +9,17 @@ import kha.Scene;
 import kha.Sprite;
 
 class BlaBox {
-	static private var padding = 15;
-	static private var maxWidth = 500;
 	static public var boxes(default, null) : Array<BlaBox> = new Array();
+	private var padding = 15;
+	private var maxWidth = 500;
+	private var font: Font;
 	private var width : Float;
 	private var height : Float;
 	private var speaker: Sprite;
-	private var font: Font;
 	private var text: Array<String> = null;
 	public var isThought = false;
+	public var persistent : Bool = false;
+	public var isInput : Bool = false;
 	
 	public function new(text: String, speaker: Sprite = null) {
 		this.speaker = speaker;
@@ -28,13 +30,12 @@ class BlaBox {
 		speaker = sprite;
 	}
 	
-	public function setText(text: String): Void {
+	public function setText(text: String, minWidth: Float = -1, minHeight: Float = -1): Void {
 		if (text != null) {
-			if (font == null) font = Loader.the.loadFont("Liberation Sans", new FontStyle(false, false, false), 20);
-			var maxWidth = BlaBox.maxWidth - 2 * padding;
+			if (font == null) font = Loader.the.loadFont("Liberation Sans", FontStyle.Default, 20);
+			var maxWidth = this.maxWidth - 2 * padding;
 			this.text = new Array();
-			width = 200;
-			height = 50;
+			width = minWidth < 0 ? 200 : minWidth;
 			text = Localization.getText(text);
 			var lines = text.split("\n");
 			for (line in lines) {
@@ -62,13 +63,21 @@ class BlaBox {
 				}
 			}
 			width += 2 * padding;
-			height = (font.getHeight() * this.text.length) + 2 * padding;
+			height = Math.max(minHeight, (font.getHeight() * this.text.length) + 2 * padding);
 		} else {
 			this.text = null;
 		}
+		
+		if (!persistent) {
+			if (text == null) {
+				boxes.remove(this);
+			} else {
+				kha.Scheduler.addTimeTask( function() { boxes.remove(this); }, text.length / 5.15783);
+			}
+		}
 	}
 	
-	public function render(g: Graphics): Void {
+	public function render(g: Graphics, x: Float = -1, y: Float = -1): Void {
 		if (text == null) return;
 		
 		var sx : Float = -1;
@@ -78,19 +87,23 @@ class BlaBox {
 			sy = speaker.y - 15 - Scene.the.screenOffsetY;
 		}
 		
-		var x : Float = (speaker == null) ? (0.5 * (kha.Game.the.width - width)) : sx - 0.3 * width;
-		
-		if (x + width > kha.Game.the.width) {
-			x -= 30 + x + width - kha.Game.the.width;
-		}
 		if (x < 0) {
-			x = 30;
+			x = (speaker == null) ? (0.5 * (kha.Game.the.width - width)) : sx - 0.3 * width;
+			
+			if (x + width > kha.Game.the.width) {
+				x -= 30 + x + width - kha.Game.the.width;
+			}
+			if (x < 0) {
+				x = 30;
+			}
 		}
 		
-		var y : Float = (speaker == null) ? (0.3 * (kha.Game.the.height - height)) : sy - 30 - height;
 		if (y < 0) {
-			sy += speaker.height + 15;
-			y = sy + 30;
+			y = (speaker == null) ? (0.3 * (kha.Game.the.height - height)) : sy - 30 - height;
+			if (y < 0) {
+				sy += speaker.height + 15;
+				y = sy + 30;
+			}
 		}
 		
 		g.color = Color.White;
@@ -118,9 +131,17 @@ class BlaBox {
 		var tx: Float = x + padding;
 		var ty: Float = y + padding;
 		
+		var lastLine = "";
 		for (line in text) {
+			lastLine = line;
 			g.drawString(line, tx, ty);
 			ty += font.getHeight();
+		}
+		if (isInput) {
+			if ((Std.int(kha.Scheduler.time() * 1.67) % 2) == 0) {
+				tx += font.stringWidth(lastLine) + 1;
+				g.drawLine(tx, ty, tx, ty - font.getHeight(), 2);
+			}
 		}
 	}
 }

@@ -107,6 +107,7 @@ class TenUp4 extends Game {
 		}
 	}
 
+	@:access(BlaBox) 
 	function initTitleScreen() {
 		Localization.language = Cfg.language;
 		Localization.buildKeys("../Assets/text.xml","text");
@@ -118,6 +119,12 @@ class TenUp4 extends Game {
 		Scene.the.setBackgroundColor(Color.fromBytes(0, 0, 0));
 		Scene.the.addHero( logo );
 		Configuration.setScreen(this);
+		
+		playerWantsToTalk = new BlaBox(null, null);
+		playerWantsToTalk.maxWidth = 360;
+		playerWantsToTalk.padding = 5;
+		playerWantsToTalk.persistent = true;
+		playerWantsToTalk.setText("", 350, 70);
 	}
 	
 	public function enterLevel(levelNumber: Int) : Void {
@@ -301,11 +308,7 @@ class TenUp4 extends Game {
 			Dialogue.next();
 			advanceDialogue = false;
 		}
-		switch (mode) {
-		case BlaBlaBla:
-			Dialogue.update();
-		default:
-		}
+		Dialogue.update();
 		
 		if (Player.current() != null) Server.the.updatePlayer(Player.current());
 	}
@@ -322,7 +325,7 @@ class TenUp4 extends Game {
 		case Congratulations:
 			var congrat = Loader.the.getImage("congratulations");
 			g.drawImage(congrat, width / 2 - congrat.width / 2, height / 2 - congrat.height / 2);
-		case Game:
+		case Game, BlaBlaBla:
 			scene.render(g);
 			g.transformation = Matrix3.identity();
 			g.color = Color.Black;
@@ -346,7 +349,11 @@ class TenUp4 extends Game {
 			g.pushTransformation(g.transformation.multmat(Matrix3.scale(3, 3)));
 			g.drawString("UNITY", 180 + 10 * Math.cos(0.3 * Sys.getTime()), 140 + 10 * Math.sin(0.6 * Sys.getTime()));
 			g.popTransformation();
-		case Loading, BlaBlaBla:
+			var b = Math.round(100 + 125 * Math.pow(Math.sin(0.5 * Sys.getTime()),2));
+			g.color = Color.fromBytes(b, b, b);
+			var str = Localization.getText(Keys_text.CLICK_TO_START);
+			g.drawString(str, 0.5 * (width - font.stringWidth(str)), 650);
+		case Loading:
 			scene.render(g);
 		}
 		if (renderOverlay) {
@@ -366,21 +373,29 @@ class TenUp4 extends Game {
 		frame.g2.end();
 	}
 	
-	@:access(Player) 
+	var playerChatStr : String = "";
+	var playerWantsToTalk : BlaBox;
+	
+	@:access(Player) @:access(BlaBox) 
 	private function drawPlayerInfo(g: Graphics, x: Float, y: Float): Void {
 		g.color = Color.fromBytes(40, 40, 40);
 		g.fillRect(x-10, y-30, TenUp4.the.width - 2 * (x-10), 90);
 		g.color = Color.White;
 		g.font = font;
-		//painter.fillRect(0, y - 30, 1024, 5);
-		g.drawString("Left Mouse", 600, y - 25);
-		//painter.fillRect(0, y + 20, 1024, 5);
-		g.drawString(Player.current().leftButton(), 620, y + 20);
-		g.drawString("Right Mouse", 800, y - 25);
-		g.drawString(Player.current().rightButton(), 820, y + 20);
-		
+		var lm1 = "Left Mouse";
+		var rm1 = "Right Mouse";
+		var lm2 = Player.current().leftButton();
+		var rm2 = Player.current().rightButton();
+		g.drawString(lm1, 650, y - 15);
+		g.drawString(lm2, 650 + 0.5 * (font.stringWidth(lm1) - font.stringWidth(lm2)), y + 15);
+		g.drawString(rm1, 820, y - 15);
+		g.drawString(rm2, 820 + 0.5 * (font.stringWidth(rm1) - font.stringWidth(rm2)), y + 15);
 		
 		g.drawString(Player.current().getName(), x + 60, y);
+		
+		playerWantsToTalk.width = playerWantsToTalk.maxWidth;
+		playerWantsToTalk.render(g, 245, y - 20);
+		
 		
 		//g.color = Color.fromBytes(30, 30, 30);
 		//g.fillRect(x-5, y-25, 50, 80);
@@ -485,6 +500,9 @@ class TenUp4 extends Game {
 					Dialogues.escMenu();
 				case Key.CTRL:
 					Player.current().up = false;
+				case Key.ENTER:
+					mode = BlaBlaBla;
+					playerWantsToTalk.isInput = true;
 				case Key.CHAR:
 					switch (char) {
 					case 'a', 'A':
@@ -493,6 +511,9 @@ class TenUp4 extends Game {
 						keyup(Key.RIGHT, null);
 					case 'w', 'W':
 						keyup(Key.UP, null);
+					case 'c', 'C':
+						mode = BlaBlaBla;
+						playerWantsToTalk.isInput = true;
 					}
 				case Key.LEFT:
 					Player.current().left = false;
@@ -509,6 +530,24 @@ class TenUp4 extends Game {
 				default:
 					enterLevel(1); // TODO: connect to server
 				}
+			case BlaBlaBla:
+				switch (key) {
+				case Key.ESC:
+					playerChatStr = "";
+					playerWantsToTalk.isInput = false;
+					mode = Game;
+				case Key.BACKSPACE:
+					playerChatStr = playerChatStr.substr(0, -1);
+				case Key.ENTER:
+					BlaBox.boxes.push(new BlaBox(playerChatStr, Player.current()));
+					playerChatStr = "";
+					playerWantsToTalk.isInput = false;
+					mode = Game;
+				case Key.CHAR:
+					playerChatStr += char;
+				default:
+				}
+				playerWantsToTalk.setText(playerChatStr, 350, 70);
 			default:
 				switch (key) {
 				case Key.ESC:
