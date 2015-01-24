@@ -19,3 +19,22 @@
 	<de>Blupp der Grausame</de>
 	<en>Blupp the Cruel</en>
 </Fischmensch>
+
+
+<!-- Abilities -->
+<ability_Punch>
+	<de>Schlagen</de>
+	<en>Punch</en>
+</ability_Punch>
+<ability_Lift>
+	<de>Heben</de>
+	<en>Lift</en>
+</ability_Lift>
+<ability_Dance>
+	<de>Tanzen</de>
+	<en>Dance</en>
+</ability_Dance>
+<ability_Repair>
+	<de>Reparieren</de>
+	<en>Repair</en>
+</ability_Repair>

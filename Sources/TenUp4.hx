@@ -250,7 +250,8 @@ class TenUp4 extends Game {
 		
 		//music.play();
 		
-		PlayerBullie.the.setCurrent();
+		//PlayerBullie.the.setCurrent();
+		PlayerBlondie.the.setCurrent();
 		Configuration.setScreen(this);
 		mode = Game;
 		Scene.the.camx = Std.int(width / 2);
@@ -322,7 +323,7 @@ class TenUp4 extends Game {
 		case Game:
 			scene.render(g);
 			g.transformation = Matrix3.identity();
-			drawPlayerInfo(g, 20, 700, Color.fromBytes(255, 0, 0));
+			drawPlayerInfo(g, 30, 700);
 		case StartScreen:
 			scene.render(g);
 			g.font = font;
@@ -337,6 +338,7 @@ class TenUp4 extends Game {
 			g.color = overlayColor;
 			g.fillRect(0, 0, width, height);
 		}
+		g.transformation = Matrix3.identity();
 		BlaBox.render(g);
 		g.end();
 		
@@ -346,35 +348,29 @@ class TenUp4 extends Game {
 	}
 	
 	@:access(Player) 
-	private function drawPlayerInfo(g: Graphics, x: Float, y: Float, color: Color): Void {
+	private function drawPlayerInfo(g: Graphics, x: Float, y: Float): Void {
+		g.color = Color.fromBytes(40, 40, 40);
+		g.fillRect(x-10, y-30, TenUp4.the.width - 2 * (x-10), 90);
 		g.color = Color.White;
-		
 		g.font = font;
 		//painter.fillRect(0, y - 30, 1024, 5);
 		g.drawString("Left Mouse", 600, y - 25);
 		//painter.fillRect(0, y + 20, 1024, 5);
-		g.drawString(Player.current().leftButton(), 620, y + 25);
+		g.drawString(Player.current().leftButton(), 620, y + 20);
 		g.drawString("Right Mouse", 800, y - 25);
-		g.drawString(Player.current().rightButton(), 820, y + 25);
+		g.drawString(Player.current().rightButton(), 820, y + 20);
 		
-		//painter.fillRect(x - 5, y - 5, 50, 50);
-		g.fillRect(x - 10, y - 25, 50, 10);
-		g.fillRect(x - 10, y - 25, 10, 90);
-		g.fillRect(x + 40, y - 25, 10, 90);
-		g.fillRect(x - 10, y - 25 + 80, 50, 10);
 		
-		g.color = Color.White;
-		g.drawImage(Player.current().mini, x, y - 20);
-		g.color = Color.fromBytes(50, 50, 50);
-		g.fillRect(x, y + 45, 40, 10);
-		g.color = Color.fromBytes(150, 0, 0);
+		g.drawString(Player.current().getName(), x + 60, y);
+		
+		//g.color = Color.fromBytes(30, 30, 30);
+		//g.fillRect(x-5, y-25, 50, 80);
+		g.color = Color.fromBytes(175, 0, 0);
 		var healthBar = 40 * Player.current().health / Player.current().maxHealth;
 		if (healthBar < 0) healthBar = 0;
-		g.fillRect(x, y + 35, healthBar, 10);
-		g.color = Color.Black;
-		g.fillRect(x + healthBar, y + 35, 40 - healthBar, 10);
-		//g.color = Color.fromBytes(0, 255, 255);
-		//g.fillRect(x, y + 45, Player.getPlayer(index).timeLeft() * 4, 10);
+		g.fillRect(x, y + 40, healthBar, 15);
+		g.color = Color.White;
+		g.drawImage(Player.current().mini, x, y - 20);
 	}
 	
 	function axisListener(axis: Int, value: Float): Void {
