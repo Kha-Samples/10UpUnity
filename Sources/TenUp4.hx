@@ -117,9 +117,6 @@ class TenUp4 extends Game {
 		Scene.the.clear();
 		Scene.the.setBackgroundColor(Color.fromBytes(0, 0, 0));
 		Scene.the.addHero( logo );
-		
-		// TODO: add Text UNITY
-		
 		Configuration.setScreen(this);
 	}
 	
@@ -325,12 +322,15 @@ class TenUp4 extends Game {
 		case Game:
 			scene.render(g);
 			g.transformation = Matrix3.identity();
-			//painter.setColor(Color.fromBytes(0, 0, 0));
-			//painter.drawString("Score: " + Std.string(Player.getInstance().getScore()), 20, 25);
-			//painter.drawString("Round: " + Std.string(Player.getInstance().getRound()), width - 100, 25);
-			
 			drawPlayerInfo(g, 20, 700, Color.fromBytes(255, 0, 0));
-		case Loading, StartScreen, BlaBlaBla:
+		case StartScreen:
+			scene.render(g);
+			g.font = font;
+			g.color = Color.Magenta;
+			g.pushTransformation(g.transformation.multmat(Matrix3.scale(3, 3)));
+			g.drawString("UNITY", 180 + 10 * Math.cos(0.3 * Sys.getTime()), 140 + 10 * Math.sin(0.6 * Sys.getTime()));
+			g.popTransformation();
+		case Loading, BlaBlaBla:
 			scene.render(g);
 		}
 		if (renderOverlay) {
