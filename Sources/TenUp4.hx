@@ -327,6 +327,19 @@ class TenUp4 extends Game {
 		case Game:
 			scene.render(g);
 			g.transformation = Matrix3.identity();
+			g.color = Color.Black;
+			for (door in Level.the.doors) {
+				var doorX = door.x + 0.5 * door.width;
+				var doorXscreen = doorX - scene.screenOffsetX; 
+				if (!door.opened && door.health > 0 && doorXscreen > 0 && doorXscreen < width) {
+					if (door.x < Player.current().x) {
+						g.fillRect(0, 0, doorXscreen, height);
+					} else {
+						g.fillRect(doorXscreen, 0, width - doorXscreen, height);
+					}
+				}
+			}
+			// TODO: block fahrstuhl
 			if (Player.current() != null) drawPlayerInfo(g, 30, 700);
 		case StartScreen:
 			scene.render(g);
