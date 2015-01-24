@@ -195,6 +195,8 @@ class TenUp4 extends Game {
 			}
 		}
 		
+		var currentId = 2;
+		
 		for (i in 0...spriteCount) {
 			var sprite : kha.Sprite = null;
 			switch (sprites[i * 3]) {
@@ -219,7 +221,7 @@ class TenUp4 extends Game {
 			case 4:
 				//aufzugknopf
 			case 5:
-				sprite = new Door(sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
+				sprite = new Door(currentId++, sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
 				Level.the.doors.push( cast sprite );
 				Scene.the.addOther(sprite);
 			case 6:
