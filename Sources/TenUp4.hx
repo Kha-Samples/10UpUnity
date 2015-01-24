@@ -199,9 +199,11 @@ class TenUp4 extends Game {
 				//Scene.the.addHero(sprite);
 			case 2:
 				sprite = new PlayerBullie(sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
+				Level.the.persons.push(cast sprite);
 				Scene.the.addHero(sprite);
 			case 3:
 				sprite = new PlayerBlondie(sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
+				Level.the.persons.push(cast sprite);
 				Scene.the.addHero(sprite);
 			case 4:
 				sprite = new Door(sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
@@ -250,7 +252,8 @@ class TenUp4 extends Game {
 		
 		//music.play();
 		
-		PlayerBullie.the.setCurrent();
+		//PlayerBullie.the.setCurrent();
+		Server.the.trigger();
 		Configuration.setScreen(this);
 		mode = Game;
 		Scene.the.camx = Std.int(width / 2);
@@ -305,6 +308,8 @@ class TenUp4 extends Game {
 			Dialogue.update();
 		default:
 		}
+		
+		if (Player.current() != null) Server.the.updatePlayer(Player.current());
 	}
 	
 	public var renderOverlay : Bool;
@@ -322,7 +327,7 @@ class TenUp4 extends Game {
 		case Game:
 			scene.render(g);
 			g.transformation = Matrix3.identity();
-			drawPlayerInfo(g, 20, 700, Color.fromBytes(255, 0, 0));
+			if (Player.current() != null) drawPlayerInfo(g, 20, 700, Color.fromBytes(255, 0, 0));
 		case StartScreen:
 			scene.render(g);
 			g.font = font;
@@ -434,6 +439,7 @@ class TenUp4 extends Game {
 	
 	function keydown(key: Key, char: String) : Void {
 		if (mode == Mode.Game) {
+			if (Player.current() == null) return;
 			switch (key) {
 			case Key.CTRL:
 				Dialogue.next();
@@ -463,6 +469,7 @@ class TenUp4 extends Game {
 	function keyup(key : Key, char : String) : Void {
 		switch (mode) {
 			case Game:
+				if (Player.current() == null) return;
 				switch (key) {
 				case Key.ESC:
 					Dialogues.escMenu();
@@ -513,6 +520,7 @@ class TenUp4 extends Game {
 		
 		switch(mode) {
 		case Game:
+			if (Player.current() == null) return;
 			if (mouseUpAction == null) {
 				switch (button) {
 				case 0:
@@ -540,6 +548,7 @@ class TenUp4 extends Game {
 		case BlaBlaBla:
 			advanceDialogue = true;
 		case Game:
+			if (Player.current() == null) return;
 			if (mouseUpAction != null) {
 				mouseUpAction();
 				mouseUpAction = null;

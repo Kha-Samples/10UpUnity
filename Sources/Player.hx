@@ -39,11 +39,13 @@ class Player extends DestructibleSprite {
 	public var mini : Image;
 	private var hitSound: Sound;
 	private static var currentPlayer: Player = null;
+	public var id: Int;
 	
 	var muzzlePoint : Vector2;
 	
-	public function new(x: Float, y: Float, image: String, width: Int, height: Int, maxHealth: Int = 50) {
+	public function new(id: Int, x: Float, y: Float, image: String, width: Int, height: Int, maxHealth: Int = 50) {
 		super(maxHealth, Loader.the.getImage(image), width, height, 0);
+		this.id = id;
 		this.x = x;
 		this.y = y;
 		standing = false;

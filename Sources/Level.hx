@@ -11,6 +11,7 @@ class Level {
 	public var computers(default, null): Array<Computer>;
 	public var interactiveSprites(default, null) : Array<InteractiveSprite>;
 	public var destructibleSprites(default, null) : Array<DestructibleSprite>;
+	public var persons(default, null) : Array<DestructibleSprite>;
 	
 	public var nextLevelNum(default, null) = -1;
 	
@@ -19,6 +20,7 @@ class Level {
 		computers = new Array();
 		destructibleSprites = new Array();
 		interactiveSprites = new Array();
+		persons = new Array();
 	}
 	
 	public function init() : Void { }

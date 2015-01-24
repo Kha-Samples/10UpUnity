@@ -1,5 +1,6 @@
 package;
 
+import haxe.Json;
 import kha.Starter;
 
 class Main {

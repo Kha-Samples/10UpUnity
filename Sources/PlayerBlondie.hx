@@ -12,7 +12,7 @@ class PlayerBlondie extends Player {
 	private var repairRightAnimation: Animation;
 	
 	public function new(x: Float, y: Float) {
-		super(x, y - 8, "mechanic", Std.int(410 / 10) * 2, Std.int(455 / 7) * 2);
+		super(0, x, y - 8, "mechanic", Std.int(410 / 10) * 2, Std.int(455 / 7) * 2);
 		mini = kha.Loader.the.getImage("mechanicmini");
 		the = this;
 		repairAmountPerSec = 50;

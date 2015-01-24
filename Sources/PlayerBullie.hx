@@ -10,7 +10,7 @@ class PlayerBullie extends Player {
 	static public var the(default, null) : PlayerBullie; 
 	
 	public function new(x: Float, y: Float) {
-		super(x, y - 8, "rowdy", Std.int(410 / 10) * 2, Std.int(455 / 7) * 2, 100);
+		super(1, x, y - 8, "rowdy", Std.int(410 / 10) * 2, Std.int(455 / 7) * 2, 100);
 		mini = kha.Loader.the.getImage("rowdymini");
 		the = this;
 		_health = 100;
