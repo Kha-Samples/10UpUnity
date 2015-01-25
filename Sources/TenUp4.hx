@@ -223,25 +223,27 @@ class TenUp4 extends Game {
 				}
 			case 2:
 				//klowand
+			
 			case 3:
 				//aufzugstür
+			
 			case 4:
 				//aufzugknopf
+			
 			case 5:
+				// Tür
 				sprite = new Door(currentId++, sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
 				Level.the.doors.push( cast sprite );
 				Scene.the.addOther(sprite);
 			case 6:
-				sprite = new Window(sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
-				Scene.the.addOther(sprite);
+				// Klo
+			
 			case 7:
-				/*sprite = new Gate(sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
-				level.gates.push(cast sprite);
-				Scene.the.addOther(sprite);*/
+				// Waschbecken
+			
 			case 8:
-				/*sprite = new Gatter(sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
-				level.gatters.push(cast sprite);
-				Scene.the.addOther(sprite);*/
+				// Feuerlöscher
+
 			case 9:
 				sprite = new Computer(sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
 				Level.the.computers.push(cast sprite);
