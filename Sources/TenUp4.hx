@@ -265,7 +265,9 @@ class TenUp4 extends Game {
 				Scene.the.addOther(sprite);
 			case 9:
 				// Stockwerk-Nummer
-
+				sprite = new ElevatorPositionSign(Level.the.levelNum, sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
+				Level.the.elevatorPositionSign = cast sprite;
+				Scene.the.addOther(sprite);
 			case 10:
 				/*sprite = new Machinegun(sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
 				Scene.the.addEnemy(sprite);*/

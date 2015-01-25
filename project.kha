@@ -269,13 +269,24 @@
 			"type": "image",
 			"file": "elevatorbuttons.png",
 			"name": "elevatorbuttons",
-			"scale": 2
+			"scale": 2,
+			"circle": false
 		},
 		{
 			"id": "27e7e4f7-1b55-47d9-98d2-86124eb22d24",
 			"type": "image",
 			"file": "toiletwall.png",
-			"name": "toiletwall"
+			"name": "toiletwall",
+			"scale": 2,
+			"circle": false
+		},
+		{
+			"id": "57132c9a-64d4-420a-b542-71d3e9e5f0ae",
+			"type": "image",
+			"file": "floorlevel.png",
+			"name": "floorlevel",
+			"scale": 2,
+			"circle": false
 		}
 	],
 	"rooms": [
@@ -324,7 +335,8 @@
 				"2348bd76-d7ce-11e1-9b23-0800200c9a66",
 				"582df776-1c75-4e76-92a7-dd792d8e5f80",
 				"c3272461-50a9-4f4a-9e29-dd715012b888",
-				"27e7e4f7-1b55-47d9-98d2-86124eb22d24"
+				"27e7e4f7-1b55-47d9-98d2-86124eb22d24",
+				"57132c9a-64d4-420a-b542-71d3e9e5f0ae"
 			]
 		},
 		{

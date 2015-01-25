@@ -14,6 +14,7 @@ class Level {
 	public var persons(default, null) : Array<DestructibleSprite>;
 	public var elevatorDoor : ElevatorDoor;
 	public var elevatorButton : ElevatorButton;
+	public var elevatorPositionSign : ElevatorPositionSign;
 	
 	public var levelNum(default, null) : Int;
 	
