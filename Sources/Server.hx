@@ -52,17 +52,22 @@ class Server {
 					kha.Configuration.setScreen(TenUp4.the);
 					TenUp4.the.mode = Game;
 				case 'updatePerson':
-					for (person in Level.the.persons) {
-						if (Std.is(person, Player)) {
-							var player: Player = cast person;
-							if (player.id == data.id) {
-								player.aimx = data.x;
-								player.aimy = data.y;
-								player.ataimx = false;
-								player.ataimy = false;
-								if (data.sleeping && !player.isSleeping()) player.sleep();
-								else if (!data.sleeping && player.isSleeping()) player.unsleep();
-								break;
+					if (data.id == Player.current().id) {
+						Player.current().usesElevator = false;
+					}
+					else {
+						for (person in Level.the.persons) {
+							if (Std.is(person, Player)) {
+								var player: Player = cast person;
+								if (player.id == data.id) {
+									player.aimx = data.x;
+									player.aimy = data.y;
+									player.ataimx = false;
+									player.ataimy = false;
+									if (data.sleeping && !player.isSleeping()) player.sleep();
+									else if (!data.sleeping && player.isSleeping()) player.unsleep();
+									break;
+								}
 							}
 						}
 					}
@@ -78,6 +83,10 @@ class Server {
 							break;
 						}
 					}
+				case 'updateElevator':
+					if (data.floor == -1) Level.the.elevatorDoor.opened = false;
+					else if (data.floor == Level.the.levelNum) Level.the.elevatorDoor.opened = true;
+					else Level.the.elevatorDoor.opened = false;
 			}
 		};
 		#end
@@ -138,5 +147,11 @@ class Server {
 		#end
 		kha.Scene.the.removeHero(Player.current());
 		Level.the.elevatorDoor.opened = false;
+	}
+	
+	public function callElevator(): Void {
+		#if js
+		socket.send(Json.stringify( { command: 'callElevator' } ));
+		#end
 	}
 }
