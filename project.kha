@@ -30,7 +30,7 @@
 		{
 			"id": "2348bd74-d7ce-11e1-9b23-0800200c9a66",
 			"type": "image",
-			"file": "tileset_s.png",
+			"file": "tileset.png",
 			"name": "tileset",
 			"scale": 2,
 			"circle": false

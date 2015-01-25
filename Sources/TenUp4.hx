@@ -149,7 +149,7 @@ class TenUp4 extends Game {
 	private function initLevel(levelNumber: Int): Void {
 		Level.the.init();
 		tileColissions = new Array<Tile>();
-		for (i in 0...352) {
+		for (i in 0...2048) {
 			tileColissions.push(new Tile(i, isCollidable(i)));
 		}
 		if ( levelNumber == 0 ) {
@@ -301,7 +301,7 @@ class TenUp4 extends Game {
 	
 	private static function isCollidable(tilenumber : Int) : Bool {
 		switch (tilenumber) {
-		case 27: return true;
+		case 0: return true;
 		default:
 			return false;
 		}
