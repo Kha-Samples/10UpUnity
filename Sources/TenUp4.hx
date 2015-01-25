@@ -301,7 +301,7 @@ class TenUp4 extends Game {
 	
 	private static function isCollidable(tilenumber : Int) : Bool {
 		switch (tilenumber) {
-		case 27: return true;
+		case 0: return true;
 		default:
 			return false;
 		}
