@@ -47,7 +47,7 @@ class Player extends DestructibleSprite {
 	var muzzlePoint : Vector2;
 	
 	public function new(id: Int, x: Float, y: Float, image: String, width: Int, height: Int, maxHealth: Int = 50) {
-		super(maxHealth, Loader.the.getImage(image), width, height, 0);
+		super(maxHealth, Loader.the.getImage(image), width, height, 1);
 		this.id = id;
 		this.x = x;
 		this.y = y;
@@ -356,12 +356,12 @@ class Player extends DestructibleSprite {
 		painter.fillRect( x - 2, y - 2, 5, 5 );*/
 	}
 	
+	public var usesElevator:Bool = false;
 	public function use() {
 		var touse = Level.the.interactiveSprites.filter(function(sprite:InteractiveSprite):Bool { return sprite.playerCanUseIt; } );
-		var px = x + originX;
-		var py = y + originY;
+		var px = x + 0.5 * tempcollider.width;
 		for (ias in touse) {
-			if (px > ias.tempcollider.x + 0.5 * ias.tempcollider.width) {
+			if (px > ias.x + 0.5 * ias.tempcollider.width) {
 				ias.useFrom(Direction.RIGHT);
 			} else {
 				ias.useFrom(Direction.LEFT);

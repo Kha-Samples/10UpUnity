@@ -41,6 +41,7 @@ enum Mode {
 	StartScreen;
 	Game;
 	BlaBlaBla;
+	Menu;
 	GameOver;
 	Congratulations;
 }
@@ -70,6 +71,7 @@ class TenUp4 extends Game {
 		highscoreName = "";
 		mode = Mode.Loading;
 		
+		Level.the = new Level(0);
 		dlg = new Dialogue();
 	}
 	
@@ -228,10 +230,12 @@ class TenUp4 extends Game {
 			case 3:
 				//aufzugstür
 				sprite = new ElevatorDoor(Level.the.levelNum, sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
+				Level.the.elevatorDoor = cast sprite;
 				Scene.the.addOther(sprite);
 			case 4:
 				//aufzugknopf
 				sprite = new ElevatorButton(Level.the.levelNum, sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
+				Level.the.elevatorButton = cast sprite;
 				Scene.the.addOther(sprite);
 			case 5:
 				// Tür
@@ -341,7 +345,7 @@ class TenUp4 extends Game {
 		case Congratulations:
 			var congrat = Loader.the.getImage("congratulations");
 			g.drawImage(congrat, width / 2 - congrat.width / 2, height / 2 - congrat.height / 2);
-		case Game, BlaBlaBla:
+		case Game, BlaBlaBla, Menu:
 			scene.render(g);
 			g.transformation = Matrix3.identity();
 			g.color = Color.Black;

@@ -18,6 +18,11 @@ using Lambda;
 class Dialogues {
 		
 	static public function escMenu() {
+		if (Player.current() != null) {
+			Player.current().left = false;
+			Player.current().right = false;
+			Player.current().up = false;
+		}
 		var msg = "What to do?";
 		var choices = new Array<Array<Dialogue.DialogueItem>>();
 		var i = 1;

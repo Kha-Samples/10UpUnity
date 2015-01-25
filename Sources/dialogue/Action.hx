@@ -36,7 +36,6 @@ class Action implements DialogueItem {
 			counter = 0;
 			switch(type) {
 				case ActionType.FADE_TO_BLACK:
-					TenUp4.the.renderOverlay = true;
 					counter = TenUp4.the.overlayColor.Ab;
 				case ActionType.FADE_FROM_BLACK:
 					counter = TenUp4.the.overlayColor.Ab;

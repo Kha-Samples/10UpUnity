@@ -18,11 +18,13 @@ class BlaBox {
 	private var speaker: Sprite;
 	private var text: Array<String> = null;
 	public var isThought = false;
-	public var persistent : Bool = false;
+	public var persistent : Bool;
 	public var isInput : Bool = false;
 	
-	public function new(text: String, speaker: Sprite = null) {
+	public function new(text: String, speaker: Sprite = null, persistent: Bool = false) {
 		this.speaker = speaker;
+		this.persistent = persistent;
+		
 		setText(text);
 		
 		if (speaker != null && speaker == Player.current()) {
@@ -84,7 +86,7 @@ class BlaBox {
 				time = 1; // TODO: FIXME!
 				kha.Scheduler.addTimeTask( function() { 
 					boxes.remove(this); 
-				}, Math.max((text.length / 15.15783), Math.max(time, 1)));
+				}, Math.max(time, 1));
 			}
 		}
 	}

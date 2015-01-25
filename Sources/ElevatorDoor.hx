@@ -39,19 +39,24 @@ class ElevatorDoor extends Sprite {
 	
 	function pushOut(sprite: Sprite) {
 		sprite.x = x - sprite.tempcollider.width - 1;
+		if (sprite == Player.current()) Player.current().usesElevator = false;
 	}
 	
 	public override function hit(sprite: Sprite) {
 		super.hit(sprite);
 		if (opened) {
-			if (sprite == Player.current() && sprite.x > x + tempcollider.width / 3) {
-				var msg = Localization.getText(Keys_text.ABILITY_DANCE);
+			if (!Player.current().usesElevator && sprite == Player.current() && sprite.x > x + tempcollider.width / 3) {
+				Player.current().usesElevator = true;
+				Player.current().left = false;
+				Player.current().right = false;
+				Player.current().up = false;
+				var msg = Localization.getText(Keys_text.DLG_ELEVATOR);
 				var choices = new Array<Array<Dialogue.DialogueItem>>();
 				var numLevels = 3; // TODO: FIXME!
 				for (i in 1...3) {
-					msg += '\n$i. ${Localization.getText(Keys_text.ABILITY_DANCE)}';
+					msg += '\n$i. ${Localization.getText(Keys_text.FLOOR)}';
 					if (i == Level.the.levelNum) {
-						msg += ' (${Localization.getText(Keys_text.ABILITY_DANCE)})';
+						msg += ' (${Localization.getText(Keys_text.DLG_ELEVATOR_STAY)})';
 						choices.push( [ new StartDialogue(pushOut.bind(sprite)) ] );
 					} else {
 						choices.push( [ new StartDialogue(Server.the.useElevator.bind(id, i)) ] );
