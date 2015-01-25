@@ -1,7 +1,9 @@
 package;
 
 import kha.Animation;
+import kha.Direction;
 import kha.Loader;
+import kha.Rectangle;
 import kha.Scene;
 import kha.Sprite;
 
@@ -16,7 +18,7 @@ class Door extends DestructibleSprite {
 	public function new(id: Int, x: Int, y: Int) {
 		super(100, Loader.the.getImage("door"), 32 * 2, 64 * 2, 0);
 		this.id = id;
-		this.x = x;
+		this.x = x - 16;
 		this.y = y;
 		accy = 0;
 		closedAnim = Animation.create(0);
@@ -73,9 +75,30 @@ class Door extends DestructibleSprite {
 		super.hit(sprite);
 		if (opened) return;
 		if (health <= 0) return;
-		if (sprite.x < x + collisionRect().width / 2) sprite.x = x - sprite.collisionRect().width - 1;
-		else if ( Std.is(sprite, Player) ) {
-			opened = true;
+		if (sprite.x < x) {
+			sprite.x = x - sprite.tempcollider.width - 1;
+		} else {
+			if (sprite.x < x + 0.5 * tempcollider.width) sprite.x = x + 0.5 * tempcollider.width;
 		}
+	}
+}
+
+
+class DoorOpener extends InteractiveSprite {
+	var door: Door;
+	public function new(door: Door, x: Float, y: Float) {
+		super(null, 32, 64 * 2, 0);
+		this.door = door;
+		this.x = x;
+		this.y = y;
+		accy = 0;
+		isUseable = true;
+	}
+	
+	override public function useFrom(dir:Direction) 
+	{
+		if (door.health <= 0) return;
+		
+		door.opened = !door.opened;
 	}
 }

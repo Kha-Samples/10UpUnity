@@ -242,6 +242,12 @@ class TenUp4 extends Game {
 				sprite = new Door(currentDoorId++, sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
 				Level.the.doors.push( cast sprite );
 				Scene.the.addOther(sprite);
+				var s = new Door.DoorOpener(cast sprite, sprite.x + 0.5 * sprite.width, sprite.y);
+				Scene.the.addOther(s);
+				Level.the.interactiveSprites.push(s);
+				s = new Door.DoorOpener(cast sprite, sprite.x - 32, sprite.y);
+				Scene.the.addOther(s);
+				Level.the.interactiveSprites.push(s);
 			case 6:
 				// Klo
 				sprite = new Sprite(null, 50, 40, 0); // TODO: fixme!

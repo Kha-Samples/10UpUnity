@@ -41,7 +41,7 @@ class InteractiveSprite extends Sprite {
 	var playerCanUseItClear = true;
 	override public function hit(sprite:Sprite):Void 
 	{
-		if (sprite == Player.current()) {
+		if (isUseable && sprite == Player.current()) {
 			playerCanUseIt = true;
 			playerCanUseItClear = false;
 		}
