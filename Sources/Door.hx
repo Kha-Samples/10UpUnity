@@ -15,6 +15,7 @@ class Door extends DestructibleSprite {
 	
 	public function new(id: Int, x: Int, y: Int) {
 		super(100, Loader.the.getImage("door"), 32 * 2, 64 * 2, 0);
+		this.id = id;
 		this.x = x;
 		this.y = y;
 		accy = 0;
