@@ -268,7 +268,8 @@
 			"id": "c3272461-50a9-4f4a-9e29-dd715012b888",
 			"type": "image",
 			"file": "elevatorbuttons.png",
-			"name": "elevatorbuttons"
+			"name": "elevatorbuttons",
+			"scale": 2
 		},
 		{
 			"id": "27e7e4f7-1b55-47d9-98d2-86124eb22d24",
