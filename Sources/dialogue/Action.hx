@@ -11,6 +11,7 @@ enum ActionType {
 	FADE_TO_BLACK;
 	FADE_FROM_BLACK;
 	THROW;
+	PAUSE;
 	AWAKE;
 }
 
@@ -39,8 +40,10 @@ class Action implements DialogueItem {
 					counter = TenUp4.the.overlayColor.Ab;
 				case ActionType.FADE_FROM_BLACK:
 					counter = TenUp4.the.overlayColor.Ab;
-				case ActionType.AWAKE:
+				case ActionType.PAUSE:
 					counter = 0;
+				case ActionType.AWAKE:
+					cast(sprites[0], Player).unsleep();
 				case ActionType.THROW:
 					finishThrow = false;
 					var from = sprites[0];
@@ -98,13 +101,13 @@ class Action implements DialogueItem {
 					} else {
 						TenUp4.the.overlayColor.Ab = counter;
 					}
-				case ActionType.AWAKE:
+				case ActionType.PAUSE:
 					++counter;
 					if (counter == 60) {
-						cast(sprites[0], Player).unsleep();
-					} else if (counter == 90) {
 						actionFinished(dlg);
 					}
+				case ActionType.AWAKE:
+					actionFinished(dlg);
 				case ActionType.THROW:
 					if (finishThrow) {
 						actionFinished(dlg);

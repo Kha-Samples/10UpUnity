@@ -12,15 +12,17 @@ class Level {
 	public var interactiveSprites(default, null) : Array<InteractiveSprite>;
 	public var destructibleSprites(default, null) : Array<DestructibleSprite>;
 	public var persons(default, null) : Array<DestructibleSprite>;
+	public var elevatorDoor : ElevatorDoor;
 	
-	public var nextLevelNum(default, null) = -1;
+	public var levelNum(default, null) : Int;
 	
-	public function new() {
+	public function new(levelNum : Int) {
 		doors = new Array();
 		computers = new Array();
 		destructibleSprites = new Array();
 		interactiveSprites = new Array();
 		persons = new Array();
+		this.levelNum = levelNum;
 	}
 	
 	public function init() : Void { }
@@ -43,17 +45,6 @@ class Level {
 				}
 			} 
 		}
-	}
-	
-	@:noCompletion var _anyKey: Bool = true;
-	public var anyKey(get, set) : Bool;
-	@:noCompletion private function set_anyKey( value : Bool ) : Bool {
-		return _anyKey = value;
-	}
-	@:noCompletion private function get_anyKey() : Bool {
-		var r = _anyKey;
-		_anyKey = false;
-		return r;
 	}
 	
 	public function checkVictory() : Bool { return false; }

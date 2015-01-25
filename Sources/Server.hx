@@ -129,4 +129,12 @@ class Server {
 		socket.send(Json.stringify( { command: 'doorSetHealth', health: health, id: id } ));
 		#end
 	}
+	
+	public function useElevator(id: Int, destinationLevel: Int): Void {
+		#if js
+		socket.send(Json.stringify( { command: 'useElevator', id: id, destination: destinationLevel, player: Player.current().id } ));
+		#end
+		kha.Scene.the.removeHero(Player.current());
+		Level.the.elevatorDoor.opened = false;
+	}
 }

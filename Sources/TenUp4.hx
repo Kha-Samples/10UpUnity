@@ -34,8 +34,6 @@ import kha.Sprite;
 import kha.Storage;
 import kha.Tile;
 import kha.Tilemap;
-import levels.Intro;
-import levels.Level1;
 import localization.Keys_text;
 
 enum Mode {
@@ -138,11 +136,11 @@ class TenUp4 extends Game {
 		Configuration.setScreen( new LoadingScreen() );
 		switch (levelNumber) {
 		case 0:
-			Level.the = new Intro();
+			//Level.the = new Intro();
 			Loader.the.loadRoom("start", initLevel.bind(0));
-		case 1:
-			Level.the = new Level1();
-			Loader.the.loadRoom("level1", initLevel.bind(1));
+		default:
+			Level.the = new Level(levelNumber);
+			Loader.the.loadRoom("level1", initLevel.bind(levelNumber));
 		}
 	}
 	
@@ -223,13 +221,17 @@ class TenUp4 extends Game {
 				}
 			case 2:
 				//klowand
-			
+				sprite = new DestructibleSprite(100, null, 40, 40, 0); // TODO: fixme!
+				sprite.x = sprites[i * 3 + 1] * 2;
+				sprite.y = sprites[i * 3 + 2] * 2;
 			case 3:
 				//aufzugstür
-			
+				sprite = new ElevatorDoor(Level.the.levelNum, sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
 			case 4:
 				//aufzugknopf
-			
+				sprite = new InteractiveSprite(null, 40, 20, 0); // TODO: fixme!
+				sprite.x = sprites[i * 3 + 1] * 2;
+				sprite.y = sprites[i * 3 + 2] * 2;
 			case 5:
 				// Tür
 				sprite = new Door(currentId++, sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
@@ -237,13 +239,19 @@ class TenUp4 extends Game {
 				Scene.the.addOther(sprite);
 			case 6:
 				// Klo
-			
+				sprite = new Sprite(null, 50, 40, 0); // TODO: fixme!
+				sprite.x = sprites[i * 3 + 1] * 2;
+				sprite.y = sprites[i * 3 + 2] * 2;
 			case 7:
 				// Waschbecken
-			
+				sprite = new Sprite(null, 40, 40, 0); // TODO: fixme!
+				sprite.x = sprites[i * 3 + 1] * 2;
+				sprite.y = sprites[i * 3 + 2] * 2;
 			case 8:
 				// Feuerlöscher
-
+				sprite = new Sprite(null, 40, 20, 0); // TODO: fixme!
+				sprite.x = sprites[i * 3 + 1] * 2;
+				sprite.y = sprites[i * 3 + 2] * 2;
 			case 9:
 				sprite = new Computer(sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
 				Level.the.computers.push(cast sprite);
@@ -278,11 +286,7 @@ class TenUp4 extends Game {
 	}
 	
 	public function victory() : Void {
-		if (Level.the.nextLevelNum < 0) {
-			showCongratulations();
-		} else {
-			enterLevel( Level.the.nextLevelNum );
-		}
+		showCongratulations();
 	}
 	
 	public function defeat() : Void {

@@ -260,7 +260,9 @@
 			"id": "582df776-1c75-4e76-92a7-dd792d8e5f80",
 			"type": "image",
 			"file": "elevator.png",
-			"name": "elevator"
+			"name": "elevator",
+			"scale": 2,
+			"circle": false
 		},
 		{
 			"id": "c3272461-50a9-4f4a-9e29-dd715012b888",

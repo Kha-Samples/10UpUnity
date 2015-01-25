@@ -41,6 +41,19 @@ Ihr bekommt mich nicht in ein Flugzeug!</de>
 Das heißt ich muss hier irgendwo etwas kurz und klein Schlagen.</de>
 </start_as_bully_3>
 
+<dlg_elevator>
+	<de>Ziel wählen:</de>
+	<en>Select destination:</en>
+</dlg_elevator>
+<dlg_elevator_stay>
+	<de>Hier bleiben</de>
+	<en>stay</en>
+</dlg_elevator_stay>
+<floor>
+	<de>Stockwerk</de>
+	<en>Floor</en>
+</floor>
+
 <!-- Abilities -->
 <ability_Punch>
 	<de>Schlagen</de>
