@@ -29,7 +29,7 @@ class Action implements DialogueItem {
 	static public var finishThrow = false;
 	
 	@:access(Dialogue.isActionActive) 
-	public function execute() : Void {
+	public function execute(dlg: Dialogue) : Void {
 		if (!started) {
 			started = true;
 			counter = 0;
@@ -84,19 +84,17 @@ class Action implements DialogueItem {
 		} else {
 			switch(type) {
 				case ActionType.FADE_TO_BLACK:
-					++counter;
-					++counter;
+					counter += 4;
 					if (!TenUp4.the.renderOverlay || counter >= 256) {
-						actionFinished();
+						actionFinished(dlg);
 					} else {
 						TenUp4.the.overlayColor.Ab = counter;
 					}
 				case ActionType.FADE_FROM_BLACK:
-					--counter;
-					--counter;
+					counter -= 4;
 					if (!TenUp4.the.renderOverlay || counter <= 0) {
 						TenUp4.the.renderOverlay = false;
-						actionFinished();
+						actionFinished(dlg);
 					} else {
 						TenUp4.the.overlayColor.Ab = counter;
 					}
@@ -105,21 +103,21 @@ class Action implements DialogueItem {
 					if (counter == 60) {
 						cast(sprites[0], Player).unsleep();
 					} else if (counter == 90) {
-						actionFinished();
+						actionFinished(dlg);
 					}
 				case ActionType.THROW:
 					if (finishThrow) {
-						actionFinished();
+						actionFinished(dlg);
 					}
 			}
 		}
 	}
 	
 	@:access(Dialogue.isActionActive) 
-	function actionFinished() {
+	function actionFinished(dlg: Dialogue) {
 		finished = true;
 		if (autoAdvance) {
-			Dialogue.next();
+			dlg.next();
 		}
 	}
 }

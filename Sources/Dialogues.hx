@@ -30,7 +30,7 @@ class Dialogues {
 		}
 		msg += '\n($i): Back"';
 		choices.push( [] );
-		Dialogue.insert( [
+		TenUp4.the.dlg.insert( [
 			new BlaWithChoices(msg, null, choices)
 			, new StartDialogue(Cfg.save)
 			, new StartDialogue(function () { Localization.language = Cfg.language; } )
@@ -38,8 +38,10 @@ class Dialogues {
 	}
 	
 	static public function startAsBully() {
-		Dialogue.insert( [
-			new Action( [PlayerBullie.the], ActionType.AWAKE )
+		PlayerBullie.the.setCurrent();
+		PlayerBullie.the.dlg.insert( [
+			new Action( null, ActionType.FADE_FROM_BLACK )
+			, new Action( [PlayerBullie.the], ActionType.AWAKE )
 			, new Bla(Keys_text.START_AS_BULLY_1, PlayerBullie.the)
 			, new Bla(Keys_text.START_AS_BULLY_2, PlayerBullie.the)
 			, new Bla(Keys_text.START_AS_BULLY_3, PlayerBullie.the)

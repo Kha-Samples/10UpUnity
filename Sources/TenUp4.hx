@@ -1,5 +1,7 @@
 package;
 
+import dialogue.Action;
+import dialogue.Bla;
 import dialogue.BlaWithChoices;
 import dialogue.StartDialogue;
 import kha.Button;
@@ -60,6 +62,8 @@ class TenUp4 extends Game {
 	private var screenMouseX: Float;
 	private var screenMouseY: Float;
 	
+	public var dlg : Dialogue;
+	
 	public var mode(default, null) : Mode;
 	
 	public function new() {
@@ -67,6 +71,8 @@ class TenUp4 extends Game {
 		the = this;
 		highscoreName = "";
 		mode = Mode.Loading;
+		
+		dlg = new Dialogue();
 	}
 	
 	public override function init(): Void {
@@ -74,6 +80,7 @@ class TenUp4 extends Game {
 		Configuration.setScreen(new LoadingScreen());
 		Loader.the.loadRoom("start", initStart);
 		Random.init( Math.round( Sys.getTime() * 1000 ) );
+		kha.Sys.mouse.hide();
 	}
 	
 	public function initStart(): Void {
@@ -95,7 +102,7 @@ class TenUp4 extends Game {
 				msg += '\n($i): ${Localization.availableLanguages[l]}';
 				++i;
 			}
-			Dialogue.set( [
+			dlg.set( [
 				new BlaWithChoices(msg, null, choices)
 				, new StartDialogue(Cfg.save)
 				, new StartDialogue(initTitleScreen)
@@ -308,11 +315,7 @@ class TenUp4 extends Game {
 			Scene.the.camx = Std.int(player.x) + Std.int(player.width / 2);
 			Scene.the.camy = Std.int(player.y + player.height + 80 - 0.5 * height);
 		}
-		if (advanceDialogue) {
-			Dialogue.next();
-			advanceDialogue = false;
-		}
-		Dialogue.update();
+		dlg.update();
 		
 		if (Player.current() != null) Server.the.updatePlayer(Player.current());
 	}
@@ -474,8 +477,6 @@ class TenUp4 extends Game {
 		if (mode == Mode.Game) {
 			if (Player.current() == null) return;
 			switch (key) {
-			case Key.CTRL:
-				Dialogue.next();
 			case Key.CHAR:
 				switch(char) {
 				case 'a', 'A':
@@ -536,7 +537,7 @@ class TenUp4 extends Game {
 				case Key.ESC:
 					Dialogues.escMenu();
 				default:
-					enterLevel(1); // TODO: connect to server
+					dlg.set([new Action(null, ActionType.FADE_TO_BLACK), new StartDialogue(enterLevel.bind(1))]);
 				}
 			case BlaBlaBla:
 				if (Player.current() == null) return;
@@ -548,7 +549,7 @@ class TenUp4 extends Game {
 				case Key.BACKSPACE:
 					playerChatStr = playerChatStr.substr(0, -1);
 				case Key.ENTER:
-					BlaBox.boxes.push(new BlaBox(playerChatStr, Player.current()));
+					Player.current().dlg.insert([new Bla(playerChatStr,Player.current())]);
 					playerChatStr = "";
 					playerWantsToTalk.isInput = false;
 					mode = Game;
@@ -602,9 +603,7 @@ class TenUp4 extends Game {
 		
 		switch (mode) {
 		case StartScreen:
-			enterLevel(1); // TODO: connect to server
-		case BlaBlaBla:
-			advanceDialogue = true;
+			dlg.set([new Action(null, ActionType.FADE_TO_BLACK), new StartDialogue(enterLevel.bind(1))]);
 		case Game:
 			if (Player.current() == null) return;
 			if (mouseUpAction != null) {

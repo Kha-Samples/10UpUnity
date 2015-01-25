@@ -13,9 +13,11 @@ import kha.Sprite;
 class InteractiveSprite extends Sprite {
 	public var isUseable(default, null) : Bool = false;
 	public var isLiftable(default, null) : Bool = false;
+	public var dlg(default, null) : Dialogue;
 	
 	public function new(image:Image, width:Int=0, height:Int=0, z:Int=1) {
 		super(image, width, height, z);
+		dlg = new Dialogue();
 	}
 	
 	public var center(get, never) : Vector2;
@@ -24,4 +26,11 @@ class InteractiveSprite extends Sprite {
 	}
 	
 	public function useFrom( dir : Direction ) { }
+	
+	override public function update():Void 
+	{
+		super.update();
+		
+		dlg.update();
+	}
 }

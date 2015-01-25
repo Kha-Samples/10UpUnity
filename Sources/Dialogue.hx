@@ -4,77 +4,76 @@ import TenUp4.Mode;
 import kha.Scene;
 
 interface DialogueItem {
-	public function execute() : Void;
+	public function execute(dlg: Dialogue) : Void;
 	public var finished(default, null) : Bool;
 }
 
-@:access(TenUp4.mode)
 class Dialogue {
-	private static var items: Array<DialogueItem>;
-	private static var index: Int = -1;
-	public static var isActionActive(default, null): Bool = false;
-	public static var blaBox: BlaBox;
+	private var items: Array<DialogueItem>;
+	private var index: Int = -1;
+	public var isActionActive(default, null): Bool = false;
+	public var blaBox: BlaBox;
 	
-	public static function set(items: Array<DialogueItem>): Void {
-		if (items == null || items.length <= 0) {
+	public function new() {}
+	
+	public function set(newItems: Array<DialogueItem>): Void {
+		if (newItems == null || newItems.length <= 0) {
 			return;
 		}
-		if (Player.current() != null) {
-			Player.current().left = false;
-			Player.current().up = false;
-			Player.current().right = false;
-		}
-		Dialogue.items = items;
+		items = newItems;
 		index = -1;
-		kha.Sys.mouse.hide();
 		next();
 	}
 	
-	public static function insert(items: Array<DialogueItem>, argl = false) {
-		if (Dialogue.items == null) {
-			set(items);
+	public function insert(insert: Array<DialogueItem>, argl = false) {
+		if (items == null) {
+			set(insert);
 		} else if (index < 0) {
-			for (item in Dialogue.items) {
-				items.push(item);
+			for (item in items) {
+				insert.push(item);
 			}
-			Dialogue.items = items;
+			items = insert;
 		} else {
 			var newItems = new Array<DialogueItem>();
 			if (!argl) {
-				newItems.push(Dialogue.items[index]);
+				newItems.push(items[index]);
 			}
-			for (item in items) {
+			for (item in insert) {
 				newItems.push(item);
 			}
 			if (!argl) {
 				++index;
 			}
-			while (index < Dialogue.items.length) {
-				newItems.push(Dialogue.items[index]);
+			while (index < items.length) {
+				newItems.push(items[index]);
 				++index;
 			}
 			index = 0;
-			Dialogue.items = newItems;
+			items = newItems;
 		}
 	}
 	
-	public static function update() : Void {
+	public function update() : Void {
 		if (index >= 0 && !items[index].finished) {
-			items[index].execute();
+			items[index].execute(this);
+		} else {
+			next();
 		}
 	}
 	
-	public static function next(): Void {
+	public function next(): Void {
 		if (items == null) return;
 		
 		if (index >= 0 && !items[index].finished) {
-			items[index].execute();
+			items[index].execute(this);
 			return;
 		}
 		
 		++index;
-		BlaBox.boxes.remove(blaBox);
-		blaBox = null;
+		if (blaBox != null) {
+			BlaBox.boxes.remove(blaBox);
+			blaBox = null;
+		}
 		
 		if (index >= items.length) {
 			items = null;
@@ -82,6 +81,6 @@ class Dialogue {
 			return;
 		}
 		
-		items[index].execute();
+		items[index].execute(this);
 	}
 }

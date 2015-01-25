@@ -7,9 +7,9 @@ class EndGame implements Dialogue.DialogueItem
 	
 	public var finished(default, null) : Bool = true;
 	
-	public function execute(): Void {
+	public function execute(dlg: Dialogue): Void {
 		//Dialogues.setGameEnd();
 		// TODO!
-		Dialogue.next();
+		dlg.next();
 	}
 }

@@ -76,7 +76,14 @@ class BlaBox {
 			if (text == null) {
 				boxes.remove(this);
 			} else {
-				kha.Scheduler.addTimeTask( function() { boxes.remove(this); }, text.length / 5.15783);
+				var numWords = 0;
+				for (line in this.text) {
+					numWords += line.split(" ").length;
+				}
+				var time = Math.min(text.length / 7.15673, numWords / 0.67);
+				kha.Scheduler.addTimeTask( function() { 
+					boxes.remove(this); 
+				}, Math.max((text.length / 15.15783), Math.max(time, 1)));
 			}
 		}
 	}
