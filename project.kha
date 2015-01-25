@@ -3,7 +3,7 @@
 	"game": {
 		"name": "10Up: Unity",
 		"width": 1024,
-		"height": 768
+		"height": 600
 	},
 	"assets": [
 		{
