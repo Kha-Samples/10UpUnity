@@ -224,14 +224,17 @@ class TenUp4 extends Game {
 				sprite = new DestructibleSprite(100, null, 40, 40, 0); // TODO: fixme!
 				sprite.x = sprites[i * 3 + 1] * 2;
 				sprite.y = sprites[i * 3 + 2] * 2;
+				Scene.the.addOther(sprite);
 			case 3:
 				//aufzugstür
 				sprite = new ElevatorDoor(Level.the.levelNum, sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
+				Scene.the.addOther(sprite);
 			case 4:
 				//aufzugknopf
 				sprite = new InteractiveSprite(null, 40, 20, 0); // TODO: fixme!
 				sprite.x = sprites[i * 3 + 1] * 2;
 				sprite.y = sprites[i * 3 + 2] * 2;
+				Scene.the.addOther(sprite);
 			case 5:
 				// Tür
 				sprite = new Door(currentDoorId++, sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
@@ -242,16 +245,19 @@ class TenUp4 extends Game {
 				sprite = new Sprite(null, 50, 40, 0); // TODO: fixme!
 				sprite.x = sprites[i * 3 + 1] * 2;
 				sprite.y = sprites[i * 3 + 2] * 2;
+				Scene.the.addOther(sprite);
 			case 7:
 				// Waschbecken
 				sprite = new Sprite(null, 40, 40, 0); // TODO: fixme!
 				sprite.x = sprites[i * 3 + 1] * 2;
 				sprite.y = sprites[i * 3 + 2] * 2;
+				Scene.the.addOther(sprite);
 			case 8:
 				// Feuerlöscher
 				sprite = new Sprite(null, 40, 20, 0); // TODO: fixme!
 				sprite.x = sprites[i * 3 + 1] * 2;
 				sprite.y = sprites[i * 3 + 2] * 2;
+				Scene.the.addOther(sprite);
 			case 9:
 				// Stockwerk-Nummer
 
