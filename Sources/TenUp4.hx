@@ -245,9 +245,8 @@ class TenUp4 extends Game {
 				// Feuerlöscher
 
 			case 9:
-				sprite = new Computer(sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
-				Level.the.computers.push(cast sprite);
-				Scene.the.addOther(sprite);
+				// Stockwerk-Nummer
+
 			case 10:
 				/*sprite = new Machinegun(sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
 				Scene.the.addEnemy(sprite);*/
