@@ -70,6 +70,14 @@ class Server {
 					var player: Player = PlayerBlondie.the;
 					if (player == Player.current()) player = PlayerBullie.the;
 					BlaBox.boxes.push(new BlaBox(data.text, player));
+				case 'changeDoor':
+					for (door in Level.the.doors) {
+						if (door.id == data.id) {
+							door.health = data.health;
+							door.opened = data.opened;
+							break;
+						}
+					}
 			}
 		};
 		#end

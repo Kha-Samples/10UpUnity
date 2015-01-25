@@ -11,7 +11,7 @@ class Door extends DestructibleSprite {
 	private var closedAnim: Animation;
 	private var crackedAnim: Animation;
 	private var destroyedAnim: Animation;
-	private var id: Int;
+	public var id: Int;
 	
 	public function new(id: Int, x: Int, y: Int) {
 		super(100, Loader.the.getImage("door"), 32 * 2, 64 * 2, 0);
