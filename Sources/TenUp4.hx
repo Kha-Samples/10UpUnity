@@ -137,7 +137,7 @@ class TenUp4 extends Game {
 	public function enterLevel(levelNumber: Int) : Void {
 		Configuration.setScreen( new LoadingScreen() );
 		switch (levelNumber) {
-		case 0:
+		case 0, 1348:
 			//Level.the = new Intro();
 			Loader.the.loadRoom("start", initLevel.bind(0));
 		default:
