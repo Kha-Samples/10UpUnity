@@ -47,4 +47,12 @@ class Dialogues {
 			, new Bla(Keys_text.START_AS_BULLY_3, PlayerBullie.the)
 		] );
 	}
+	static public function startAsMechanic() {
+		PlayerBullie.the.setCurrent();
+		PlayerBullie.the.dlg.insert( [
+			new Action( null, ActionType.FADE_FROM_BLACK )
+			, new Action( [PlayerBlondie.the], ActionType.AWAKE )
+			, new Bla(Keys_text.START_AS_MECHANIC, PlayerBlondie.the)
+		] );
+	}
 }

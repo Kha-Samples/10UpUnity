@@ -44,7 +44,7 @@ class Server {
 			switch (data.command) {
 				case 'setPlayer':
 					if (data.id == 0) {
-						PlayerBlondie.the.setCurrent();
+						Dialogues.startAsMechanic();
 					}
 					else if (data.id == 1) {
 						Dialogues.startAsBully();
