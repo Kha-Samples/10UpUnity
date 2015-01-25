@@ -31,9 +31,9 @@ class ElevatorButton extends InteractiveSprite {
 	
 	override public function useFrom(dir:Direction) 
 	{
-		Level.the.elevatorDoor.opened = true;
+		//Level.the.elevatorDoor.opened = true;
 		called = true;
 		setAnimation(greenAnim);
-		// TODO: FIXME!
+		Server.the.callElevator();
 	}
 }
