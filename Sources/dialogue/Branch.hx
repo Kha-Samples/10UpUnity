@@ -15,13 +15,13 @@ class IntBranch implements Branch {
 	
 	public var finished(default, null) : Bool = true;
 	
-	public function execute() : Void {
+	public function execute(dlg: Dialogue) : Void {
 		var r = condFunc();
 		if (r < 0) {
 			r = branches.length - r;
 		}
-		Dialogue.insert(branches[r]);
-		Dialogue.next();
+		dlg.insert(branches[r]);
+		dlg.next();
 	}
 }
 
@@ -38,12 +38,12 @@ class BooleanBranch implements Branch {
 	
 	public var finished(default, null) : Bool = true;
 	
-	public function execute() : Void {
+	public function execute(dlg: Dialogue) : Void {
 		if (condFunc()) {
-			Dialogue.insert(onTrue);
+			dlg.insert(onTrue);
 		} else {
-			Dialogue.insert(onFalse);
+			dlg.insert(onFalse);
 		}
-		Dialogue.next();
+		dlg.next();
 	}
 }

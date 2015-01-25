@@ -25,21 +25,23 @@ class BlaWithChoices extends Bla {
 		this.finished = false;
 	}
 	
+	var dlg: Dialogue;
 	@:access(Dialogues.dlgChoices) 
 	private function keyUpListener(key:Key, char: String) {
 		var choice = char.fastCodeAt(0) - '1'.fastCodeAt(0);
 		if (choice >= 0 && choice < choices.length) {
 			Keyboard.get().remove(null, keyUpListener);
 			this.finished = true;
-			Dialogue.insert(choices[choice]);
-			Dialogue.next();
+			dlg.insert(choices[choice]);
+			dlg.next();
 		}
 	}
 	
-	override public function execute() : Void {
+	override public function execute(dlg: Dialogue) : Void {
 		switch (status) {
 			case BlaWithChoicesStatus.BLA:
-				super.execute();
+				this.dlg = dlg;
+				super.execute(dlg);
 				Keyboard.get().notify(null, keyUpListener);
 				status = BlaWithChoicesStatus.CHOICE;
 			case BlaWithChoicesStatus.CHOICE:

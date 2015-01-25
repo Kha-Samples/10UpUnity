@@ -12,8 +12,8 @@ class StartDialogue implements Dialogue.DialogueItem
 	
 	public var finished(default, null) : Bool = true;
 	
-	public function execute(): Void {
+	public function execute(dlg: Dialogue): Void {
 		func();
-		Dialogue.next();
+		dlg.next();
 	}
 }

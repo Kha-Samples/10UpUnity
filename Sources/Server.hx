@@ -47,7 +47,6 @@ class Server {
 						PlayerBlondie.the.setCurrent();
 					}
 					else if (data.id == 1) {
-						PlayerBullie.the.setCurrent();
 						Dialogues.startAsBully();
 					}
 					kha.Configuration.setScreen(TenUp4.the);
@@ -78,7 +77,7 @@ class Server {
 	
 	public function trigger(): Void {
 		#if !js
-		PlayerBullie.the.setCurrent();
+		Dialogues.startAsBully();
 		kha.Configuration.setScreen(TenUp4.the);
 		TenUp4.the.mode = Game;
 		#end
