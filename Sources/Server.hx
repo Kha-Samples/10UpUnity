@@ -87,6 +87,7 @@ class Server {
 					if (data.floor == -1) Level.the.elevatorDoor.opened = false;
 					else if (data.floor == Level.the.levelNum) Level.the.elevatorDoor.opened = true;
 					else Level.the.elevatorDoor.opened = false;
+					Level.the.elevatorPositionSign.position = data.floor;
 			}
 		};
 		#end
