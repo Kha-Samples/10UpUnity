@@ -76,7 +76,7 @@ class TenUp4 extends Game {
 	}
 	
 	public override function init(): Void {
-		backbuffer = Image.createRenderTarget(1024, 768);
+		backbuffer = Image.createRenderTarget(width, height);
 		Configuration.setScreen(new LoadingScreen());
 		Loader.the.loadRoom("start", initStart);
 		Random.init( Math.round( Sys.getTime() * 1000 ) );
@@ -352,7 +352,7 @@ class TenUp4 extends Game {
 				}
 			}
 			// TODO: block fahrstuhl
-			if (Player.current() != null) drawPlayerInfo(g, 30, 700);
+			if (Player.current() != null) drawPlayerInfo(g);
 		case StartScreen:
 			scene.render(g);
 			g.font = font;
@@ -388,7 +388,9 @@ class TenUp4 extends Game {
 	var playerWantsToTalk : BlaBox;
 	
 	@:access(Player) @:access(BlaBox) 
-	private function drawPlayerInfo(g: Graphics, x: Float, y: Float): Void {
+	private function drawPlayerInfo(g: Graphics): Void {
+		var x = 30;
+		var y = height - 85;
 		g.color = Color.fromBytes(40, 40, 40);
 		g.fillRect(x-10, y-30, TenUp4.the.width - 2 * (x-10), 90);
 		g.color = Color.White;
