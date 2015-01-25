@@ -48,8 +48,8 @@ class Dialogues {
 		] );
 	}
 	static public function startAsMechanic() {
-		PlayerBullie.the.setCurrent();
-		PlayerBullie.the.dlg.insert( [
+		PlayerBlondie.the.setCurrent();
+		PlayerBlondie.the.dlg.insert( [
 			new Action( null, ActionType.FADE_FROM_BLACK )
 			, new Action( [PlayerBlondie.the], ActionType.AWAKE )
 			, new Bla(Keys_text.START_AS_MECHANIC, PlayerBlondie.the)
