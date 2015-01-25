@@ -81,6 +81,7 @@ class BlaBox {
 					numWords += line.split(" ").length;
 				}
 				var time = Math.min(text.length / 7.15673, numWords / 0.67);
+				time = 1; // TODO: FIXME!
 				kha.Scheduler.addTimeTask( function() { 
 					boxes.remove(this); 
 				}, Math.max((text.length / 15.15783), Math.max(time, 1)));

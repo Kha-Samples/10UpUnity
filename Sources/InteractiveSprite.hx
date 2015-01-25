@@ -14,6 +14,7 @@ class InteractiveSprite extends Sprite {
 	public var isUseable(default, null) : Bool = false;
 	public var isLiftable(default, null) : Bool = false;
 	public var dlg(default, null) : Dialogue;
+	public var playerCanUseIt(default, null) : Bool = false;
 	
 	public function new(image:Image, width:Int=0, height:Int=0, z:Int=1) {
 		super(image, width, height, z);
@@ -32,5 +33,17 @@ class InteractiveSprite extends Sprite {
 		super.update();
 		
 		dlg.update();
+		
+		if (playerCanUseItClear) playerCanUseIt = false;
+		else playerCanUseItClear = true;
+	}
+	
+	var playerCanUseItClear = true;
+	override public function hit(sprite:Sprite):Void 
+	{
+		if (sprite == Player.current()) {
+			playerCanUseIt = true;
+			playerCanUseItClear = false;
+		}
 	}
 }

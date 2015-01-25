@@ -70,6 +70,7 @@ class Door extends DestructibleSprite {
 	}
 	
 	public override function hit(sprite: Sprite) {
+		super.hit(sprite);
 		if (opened) return;
 		if (health <= 0) return;
 		if (sprite.x < x + collisionRect().width / 2) sprite.x = x - sprite.collisionRect().width - 1;

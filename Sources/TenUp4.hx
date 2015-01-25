@@ -231,9 +231,7 @@ class TenUp4 extends Game {
 				Scene.the.addOther(sprite);
 			case 4:
 				//aufzugknopf
-				sprite = new InteractiveSprite(null, 40, 20, 0); // TODO: fixme!
-				sprite.x = sprites[i * 3 + 1] * 2;
-				sprite.y = sprites[i * 3 + 2] * 2;
+				sprite = new ElevatorButton(Level.the.levelNum, sprites[i * 3 + 1] * 2, sprites[i * 3 + 2] * 2);
 				Scene.the.addOther(sprite);
 			case 5:
 				// Tür
@@ -405,9 +403,9 @@ class TenUp4 extends Game {
 		g.color = Color.fromBytes(40, 40, 40);
 		g.fillRect(x-10, y-30, TenUp4.the.width - 2 * (x-10), 90);
 		g.color = Color.White;
-		g.font = font;
-		var lm1 = "Left Mouse";
-		var rm1 = "Right Mouse";
+		g.font = Loader.the.loadFont("Liberation Sans", FontStyle.Default, 20);
+		var lm1 = "L. Mouse, SPACE";
+		var rm1 = "R. Mouse, CTRL";
 		var lm2 = Player.current().leftButton();
 		var rm2 = Player.current().rightButton();
 		g.drawString(lm1, 650, y - 15);
@@ -415,6 +413,7 @@ class TenUp4 extends Game {
 		g.drawString(rm1, 820, y - 15);
 		g.drawString(rm2, 820 + 0.5 * (font.stringWidth(rm1) - font.stringWidth(rm2)), y + 15);
 		
+		g.font = font;
 		g.drawString(Player.current().getName(), x + 60, y);
 		
 		playerWantsToTalk.width = playerWantsToTalk.maxWidth;
@@ -500,6 +499,8 @@ class TenUp4 extends Game {
 					keydown(Key.UP, null);
 				case 's', 'S':
 					keydown(Key.DOWN, null);
+				case ' ':
+				Player.current().prepareSpecialAbilityA();
 				default:
 				}
 			case Key.LEFT:
@@ -508,6 +509,8 @@ class TenUp4 extends Game {
 				Player.current().right = true;
 			case Key.UP:
 				Player.current().setUp();
+			case Key.SHIFT:
+				Player.current().prepareSpecialAbilityB();
 			default:
 			}
 		}
@@ -520,8 +523,6 @@ class TenUp4 extends Game {
 				switch (key) {
 				case Key.ESC:
 					Dialogues.escMenu();
-				case Key.CTRL:
-					Player.current().up = false;
 				case Key.ENTER:
 					mode = BlaBlaBla;
 					playerWantsToTalk.isInput = true;
@@ -536,6 +537,10 @@ class TenUp4 extends Game {
 					case 'c', 'C':
 						mode = BlaBlaBla;
 						playerWantsToTalk.isInput = true;
+					case ' ':
+						Player.current().useSpecialAbilityA();
+					case 'e', 'E':
+						Player.current().use();
 					}
 				case Key.LEFT:
 					Player.current().left = false;
@@ -543,6 +548,10 @@ class TenUp4 extends Game {
 					Player.current().right = false;
 				case Key.UP:
 					Player.current().up = false;
+				case Key.SHIFT:
+					Player.current().useSpecialAbilityB();
+				case Key.CTRL:
+					Player.current().use();
 				default:
 				}
 			case StartScreen:

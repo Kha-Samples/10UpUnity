@@ -355,4 +355,17 @@ class Player extends DestructibleSprite {
 		painter.setColor( kha.Color.fromBytes(0,255,0) );
 		painter.fillRect( x - 2, y - 2, 5, 5 );*/
 	}
+	
+	public function use() {
+		var touse = Level.the.interactiveSprites.filter(function(sprite:InteractiveSprite):Bool { return sprite.playerCanUseIt; } );
+		var px = x + originX;
+		var py = y + originY;
+		for (ias in touse) {
+			if (px > ias.tempcollider.x + 0.5 * ias.tempcollider.width) {
+				ias.useFrom(Direction.RIGHT);
+			} else {
+				ias.useFrom(Direction.LEFT);
+			}
+		}
+	}
 }

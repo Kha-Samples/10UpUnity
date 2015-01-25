@@ -15,7 +15,8 @@ class ElevatorDoor extends Sprite {
 	private var id: Int;
 	
 	public function new(id: Int, x: Int, y: Int) {
-		super(Loader.the.getImage("elevator"), 78 * 2, 64 * 2, 2);
+		super(Loader.the.getImage("elevator"), 78 * 2, 64 * 2, 0);
+		this.id = id;
 		this.x = x;
 		this.y = y;
 		accy = 0;
@@ -37,11 +38,11 @@ class ElevatorDoor extends Sprite {
 	}
 	
 	function pushOut(sprite: Sprite) {
-		if (sprite.x < x + tempcollider.width / 2) sprite.x = x - sprite.tempcollider.width - 1;
-		else sprite.x = x + tempcollider.width + 1 - (sprite.tempcollider.x - sprite.x);
+		sprite.x = x - sprite.tempcollider.width - 1;
 	}
 	
 	public override function hit(sprite: Sprite) {
+		super.hit(sprite);
 		if (opened) {
 			if (sprite == Player.current() && sprite.x > x + tempcollider.width / 3) {
 				var msg = Localization.getText(Keys_text.ABILITY_DANCE);
@@ -60,8 +61,6 @@ class ElevatorDoor extends Sprite {
 					new BlaWithChoices(msg, null, choices)
 				] );
 			}
-		} else {
-			pushOut(sprite);
 		}
 	}
 }
