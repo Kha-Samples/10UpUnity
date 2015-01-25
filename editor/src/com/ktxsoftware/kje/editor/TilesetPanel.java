@@ -16,7 +16,7 @@ public class TilesetPanel extends JPanel implements MouseListener, MouseMotionLi
 	private static final long serialVersionUID = 1L;
 	
 	public static final int PANEL_WIDTH = 400;
-	public static final int PANEL_HEIGHT = 352;
+	public static final int PANEL_HEIGHT = 704;
 	
 	private static TilesetPanel instance;
 	
