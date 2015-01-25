@@ -245,18 +245,21 @@ class TenUp4 extends Game {
 			case 6:
 				// Klo
 				sprite = new Sprite(null, 50, 40, 0); // TODO: fixme!
+				sprite.accy = 0;
 				sprite.x = sprites[i * 3 + 1] * 2;
 				sprite.y = sprites[i * 3 + 2] * 2;
 				Scene.the.addOther(sprite);
 			case 7:
 				// Waschbecken
 				sprite = new Sprite(null, 40, 40, 0); // TODO: fixme!
+				sprite.accy = 0;
 				sprite.x = sprites[i * 3 + 1] * 2;
 				sprite.y = sprites[i * 3 + 2] * 2;
 				Scene.the.addOther(sprite);
 			case 8:
 				// Feuerlöscher
 				sprite = new Sprite(null, 40, 20, 0); // TODO: fixme!
+				sprite.accy = 0;
 				sprite.x = sprites[i * 3 + 1] * 2;
 				sprite.y = sprites[i * 3 + 2] * 2;
 				Scene.the.addOther(sprite);
@@ -408,20 +411,31 @@ class TenUp4 extends Game {
 		g.fillRect(x-10, y-30, TenUp4.the.width - 2 * (x-10), 90);
 		g.color = Color.White;
 		g.font = Loader.the.loadFont("Liberation Sans", FontStyle.Default, 20);
-		var lm1 = "L. Mouse, SPACE";
-		var rm1 = "R. Mouse, CTRL";
+		var lm1 = "L. Mouse, SPACE:";
+		var rm1 = "R. Mouse, CTRL:";
+		var u1 = "E, SCHIFT:";
+		var u2 = Localization.getText(Keys_text.ABILITY_USE);
 		var lm2 = Player.current().leftButton();
 		var rm2 = Player.current().rightButton();
-		g.drawString(lm1, 650, y - 15);
-		g.drawString(lm2, 650 + 0.5 * (font.stringWidth(lm1) - font.stringWidth(lm2)), y + 15);
-		g.drawString(rm1, 820, y - 15);
-		g.drawString(rm2, 820 + 0.5 * (font.stringWidth(rm1) - font.stringWidth(rm2)), y + 15);
+		var ty : Float = y - 15;
+		var w1 = g.font.stringWidth(lm1);
+		var w2 = g.font.stringWidth(rm1);
+		var w3 = g.font.stringWidth(u1);
+		var wm = Math.max(w1, Math.max(w2, w3));
+		g.drawString(lm1, 600 + wm - w1, ty);
+		g.drawString(lm2, 600 + wm + 5, ty);
+		ty += g.font.getHeight() + 1;
+		g.drawString(rm1, 600 + wm - w2, ty);
+		g.drawString(rm2, 600 + wm + 5, ty);
+		ty += g.font.getHeight() + 1;
+		g.drawString(u1, 600 + wm - w3, ty);
+		g.drawString(u2, 600 + wm + 5, ty);
 		
 		g.font = font;
 		g.drawString(Player.current().getName(), x + 60, y);
 		
 		playerWantsToTalk.width = playerWantsToTalk.maxWidth;
-		playerWantsToTalk.render(g, 245, y - 20);
+		playerWantsToTalk.render(g, 225, y - 20);
 		
 		
 		//g.color = Color.fromBytes(30, 30, 30);

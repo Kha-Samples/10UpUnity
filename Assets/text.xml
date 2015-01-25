@@ -71,3 +71,7 @@ Das heißt ich muss hier irgendwo etwas kurz und klein Schlagen.</de>
 	<de>Reparieren</de>
 	<en>Repair</en>
 </ability_Repair>
+<ability_Use>
+	<de>Drück</de>
+	<en>Press</en>
+</ability_Use>

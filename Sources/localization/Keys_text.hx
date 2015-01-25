@@ -16,4 +16,5 @@ class Keys_text {
 	static public var ABILITY_LIFT = "ability_Lift";
 	static public var ABILITY_DANCE = "ability_Dance";
 	static public var ABILITY_REPAIR = "ability_Repair";
+	static public var ABILITY_USE = "ability_Use";
 }
