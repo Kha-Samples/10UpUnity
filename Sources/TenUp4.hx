@@ -81,6 +81,7 @@ class TenUp4 {
 	}
 	
 	public function initStart(): Void {
+		Scene.the.setSize(width, height);
 		System.notifyOnRender(render);
 		Scheduler.addTimeTask(update, 0, 1 / 60);
 		if (Gamepad.get(0) != null) Gamepad.get(0).notify(axisListener, buttonListener);
@@ -116,7 +117,7 @@ class TenUp4 {
 		mode = StartScreen;
 		
 		Localization.language = Cfg.language;
-		Localization.buildKeys("../Assets/text.xml","text");
+		Localization.buildKeys("../Assets/Blobs/text.xml", "text");
 		
 		var logo = new Sprite( Assets.images._10up_logo );
 		logo.x = 0.5 * width - 0.5 * logo.width;
