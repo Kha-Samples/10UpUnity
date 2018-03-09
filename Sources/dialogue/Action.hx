@@ -3,9 +3,9 @@ package dialogue;
 import Dialogue.DialogueItem;
 import kha.Color;
 import kha.math.Vector2;
-import kha.Scene;
+import kha2d.Scene;
 import kha.Scheduler;
-import kha.Sprite;
+import kha2d.Sprite;
 
 enum ActionType {
 	FADE_TO_BLACK;

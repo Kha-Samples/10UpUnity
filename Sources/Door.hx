@@ -1,11 +1,11 @@
 package;
 
-import kha.Animation;
-import kha.Direction;
-import kha.Loader;
-import kha.Rectangle;
-import kha.Scene;
-import kha.Sprite;
+import kha.Assets;
+import kha2d.Animation;
+import kha2d.Direction;
+import kha2d.Rectangle;
+import kha2d.Scene;
+import kha2d.Sprite;
 
 class Door extends DestructibleSprite {
 	public var opened(default,set) = false;
@@ -16,7 +16,7 @@ class Door extends DestructibleSprite {
 	public var id: Int;
 	
 	public function new(id: Int, x: Int, y: Int) {
-		super(100, Loader.the.getImage("door"), 32 * 2, 64 * 2, 0);
+		super(100, Assets.images.door, 32 * 2, 64 * 2, 0);
 		this.id = id;
 		this.x = x;
 		this.y = y;

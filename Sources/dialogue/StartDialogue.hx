@@ -1,5 +1,6 @@
 package dialogue;
-import kha.Sprite;
+
+import kha2d.Sprite;
 
 class StartDialogue implements Dialogue.DialogueItem
 {

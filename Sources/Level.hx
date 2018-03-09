@@ -1,7 +1,7 @@
 package;
 
 import kha.graphics2.Graphics;
-import kha.Sprite;
+import kha2d.Sprite;
 
 class Level {
 	public static var the: Level;

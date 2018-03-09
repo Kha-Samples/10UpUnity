@@ -1,13 +1,13 @@
 package projectiles;
 
+import kha.Assets;
 import kha.Color;
 import kha.graphics2.Graphics;
 import kha.Image;
-import kha.Loader;
-import kha.math.Matrix3;
-import kha.Rectangle;
-import kha.Scene;
-import kha.Sprite;
+import kha.math.FastMatrix3;
+import kha2d.Rectangle;
+import kha2d.Scene;
+import kha2d.Sprite;
 
 class FistOfDoom extends Projectile {
 	var owner: PlayerBullie;
@@ -19,7 +19,7 @@ class FistOfDoom extends Projectile {
 	
 	public function new(owner: PlayerBullie, width:Int = 0, height:Int = 0) {
 		if (owner.z == 9) owner.z = 8;
-		super(Loader.the.getImage("fist"), width, height, owner.z + 1);
+		super(Assets.images.fist, width, height, owner.z + 1);
 		
 		this.owner = owner;
 		
@@ -105,7 +105,7 @@ class FistOfDoom extends Projectile {
 	}
 	
 	override public function render(g: Graphics): Void {
-		g.pushTransformation(g.transformation * Matrix3.translation(x + originX, y + originY) * Matrix3.rotation(angle) * Matrix3.translation( -x - originX, -y - originY));
+		g.pushTransformation(g.transformation.multmat(FastMatrix3.translation(x + originX, y + originY)).multmat(FastMatrix3.rotation(angle)).multmat(FastMatrix3.translation( -x - originX, -y - originY)));
 		g.color = Color.White;
 		if (owner.lookRight) {
 			g.drawScaledSubImage(image, 0, 0, width, height, (owner.x - owner.collider.x) + relx, (owner.y - owner.collider.y) + rely, width, height);

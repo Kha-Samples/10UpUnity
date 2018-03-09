@@ -4,36 +4,28 @@ import dialogue.Action;
 import dialogue.Bla;
 import dialogue.BlaWithChoices;
 import dialogue.StartDialogue;
-import kha.Button;
+import kha.Assets;
 import kha.Color;
 import kha.Font;
 import kha.FontStyle;
 import kha.Framebuffer;
-import kha.Game;
 import kha.graphics2.Graphics;
-import kha.HighscoreList;
 import kha.Image;
 import kha.input.Gamepad;
 import kha.input.Keyboard;
+import kha.input.KeyCode;
 import kha.input.Mouse;
-import kha.Key;
-import kha.Loader;
-import kha.LoadingScreen;
-import kha.math.Matrix3;
+import kha.math.FastMatrix3;
 import kha.math.Random;
-import kha.Music;
 import kha.Scaler;
-import kha.Scene;
+import kha2d.Scene;
 import kha.Scheduler;
-import kha.Score;
-import kha.Sys;
-import kha.Configuration;
+import kha.System;
 import kha.ScreenRotation;
-import kha.SoundChannel;
-import kha.Sprite;
+import kha2d.Sprite;
 import kha.Storage;
-import kha.Tile;
-import kha.Tilemap;
+import kha2d.Tile;
+import kha2d.Tilemap;
 import localization.Keys_text;
 
 enum Mode {
@@ -46,8 +38,10 @@ enum Mode {
 	Congratulations;
 }
 
-class TenUp4 extends Game {
+class TenUp4 {
 	public static var the(default, null): TenUp4;
+	public static inline var width = 1024;
+	public static inline var height = 600;
 	private var backbuffer: Image;
 	//var music : Music;
 	var tileColissions : Array<Tile>;
@@ -55,6 +49,7 @@ class TenUp4 extends Game {
 	var originalmap : Array<Array<Int>>;
 	var highscoreName : String;
 	private var font: Font;
+	private var fontSize: Int;
 	
 	public var mouseX: Float;
 	public var mouseY: Float;
@@ -66,34 +61,38 @@ class TenUp4 extends Game {
 	public var mode(default, null) : Mode;
 	
 	public function new() {
-		super("10Up: Unity", false);
 		the = this;
 		highscoreName = "";
 		mode = Mode.Loading;
 		
 		Level.the = new Level(0);
 		dlg = new Dialogue();
+
+		System.init({title: "10Up: Unity", width: width, height: height}, init);
 	}
 	
-	public override function init(): Void {
+	function init(): Void {
 		backbuffer = Image.createRenderTarget(width, height);
-		Configuration.setScreen(new LoadingScreen());
-		Loader.the.loadRoom("start", initStart);
-		Random.init( Math.round( Sys.getTime() * 1000 ) );
-		kha.Sys.mouse.hide();
+		Assets.loadEverything(function () {
+			Random.init( Math.round( System.time * 1000 ) );
+			//kha.Sys.mouse.hide();
+			initStart();
+		});
 	}
 	
 	public function initStart(): Void {
+		System.notifyOnRender(render);
+		Scheduler.addTimeTask(update, 0, 1 / 60);
 		if (Gamepad.get(0) != null) Gamepad.get(0).notify(axisListener, buttonListener);
-		Keyboard.get().notify(keydown, keyup);
+		Keyboard.get().notify(keydown, keyup, keypress);
 		Mouse.get().notify(mousedown, mouseup, mousemove, mousewheel);
 		
-		font = Loader.the.loadFont("arial", FontStyle.Default, 34);
-		Localization.init("localizations");
+		font = Assets.fonts.arial;
+		fontSize = 34;
+		Localization.init("localizations_xml");
 		
 		Cfg.init();
 		if (Cfg.language == null) {
-			Configuration.setScreen(this);
 			var msg = "Please select your language:";
 			var choices = new Array<Array<Dialogue.DialogueItem>>();
 			var i = 1;
@@ -119,13 +118,12 @@ class TenUp4 extends Game {
 		Localization.language = Cfg.language;
 		Localization.buildKeys("../Assets/text.xml","text");
 		
-		var logo = new Sprite( Loader.the.getImage( "10up-logo" ) );
+		var logo = new Sprite( Assets.images._10up_logo );
 		logo.x = 0.5 * width - 0.5 * logo.width;
 		logo.y = 0.5 * height - 0.5 * logo.height;
 		Scene.the.clear();
 		Scene.the.setBackgroundColor(Color.fromBytes(0, 0, 0));
 		Scene.the.addHero( logo );
-		Configuration.setScreen(this);
 		
 		playerWantsToTalk = new BlaBox(null, null);
 		playerWantsToTalk.maxWidth = 360;
@@ -135,14 +133,13 @@ class TenUp4 extends Game {
 	}
 	
 	public function enterLevel(levelNumber: Int) : Void {
-		Configuration.setScreen( new LoadingScreen() );
 		switch (levelNumber) {
 		case 0, 1348:
 			//Level.the = new Intro();
-			Loader.the.loadRoom("start", initLevel.bind(0));
+			initLevel(0);
 		default:
 			Level.the = new Level(levelNumber);
-			Loader.the.loadRoom("level1", initLevel.bind(levelNumber));
+			initLevel(levelNumber);
 		}
 	}
 	
@@ -154,17 +151,17 @@ class TenUp4 extends Game {
 		}
 		if ( levelNumber == 0 ) {
 			Scene.the.clear();
-			Configuration.setScreen(this);
 			mode = StartScreen; // TODO check!
 		} else {
-			var blob = Loader.the.getBlob("flatlevel");
-			var levelWidth: Int = blob.readS32BE();
-			var levelHeight: Int = blob.readS32BE();
+			var blob = Assets.blobs.flatlevel;
+			var fileIndex = 0;
+			var levelWidth: Int = blob.readS32BE(fileIndex); fileIndex += 4;
+			var levelHeight: Int = blob.readS32BE(fileIndex); fileIndex += 4;
 			originalmap = new Array<Array<Int>>();
 			for (x in 0...levelWidth) {
 				originalmap.push(new Array<Int>());
 				for (y in 0...levelHeight) {
-					originalmap[x].push(blob.readS32BE());
+					originalmap[x].push(blob.readS32BE(fileIndex)); fileIndex += 4;
 				}
 			}
 			map = new Array<Array<Int>>();
@@ -174,12 +171,12 @@ class TenUp4 extends Game {
 					map[x].push(0);
 				}
 			}
-			var spriteCount = blob.readS32BE();
+			var spriteCount = blob.readS32BE(fileIndex); fileIndex += 4;
 			var sprites = new Array<Int>();
 			for (i in 0...spriteCount) {
-				sprites.push(blob.readS32BE());
-				sprites.push(blob.readS32BE());
-				sprites.push(blob.readS32BE());
+				sprites.push(blob.readS32BE(fileIndex)); fileIndex += 4;
+				sprites.push(blob.readS32BE(fileIndex)); fileIndex += 4;
+				sprites.push(blob.readS32BE(fileIndex)); fileIndex += 4;
 			}
 			//music = Loader.the.getMusic("level1");
 			startGame(spriteCount, sprites);
@@ -188,7 +185,7 @@ class TenUp4 extends Game {
 	
 	public function startGame(spriteCount: Int, sprites: Array<Int>) {
 		Scene.the.clear();
-		var tilemap : Tilemap = new Tilemap("tileset", 32, 32, map, tileColissions);
+		var tilemap : Tilemap = new Tilemap(Assets.images.tileset, 32, 32, map, tileColissions);
 		Scene.the.setColissionMap(tilemap);
 		Scene.the.addBackgroundTilemap(tilemap, 1);
 		var TILE_WIDTH : Int = 32;
@@ -205,7 +202,7 @@ class TenUp4 extends Game {
 		var currentDoorId = 0;
 		
 		for (i in 0...spriteCount) {
-			var sprite : kha.Sprite = null;
+			var sprite : kha2d.Sprite = null;
 			switch (sprites[i * 3]) {
 			case 0:
 				if (PlayerBlondie.the == null) {
@@ -331,8 +328,8 @@ class TenUp4 extends Game {
 		}
 	}
 	
-	public override function update() {
-		super.update();
+	function update() {
+		Scene.the.update();
 		updateMouse();
 		var player = Player.current();
 		if (player != null) {
@@ -346,29 +343,30 @@ class TenUp4 extends Game {
 	
 	public var renderOverlay : Bool;
 	public var overlayColor : Color;
-	public override function render(frame: Framebuffer) {
+	
+	function render(frame: Framebuffer) {
 		var g = backbuffer.g2;
 		g.begin();
 		switch (mode) {
 		case GameOver:
-			var congrat = Loader.the.getImage("gameover");
+			var congrat = null; //Assets.images.gameover;
 			g.drawImage(congrat, width / 2 - congrat.width / 2, height / 2 - congrat.height / 2);
 		case Congratulations:
-			var congrat = Loader.the.getImage("congratulations");
+			var congrat = null; //Assets.images.congratulations;
 			g.drawImage(congrat, width / 2 - congrat.width / 2, height / 2 - congrat.height / 2);
 		case Game, BlaBlaBla, Menu:
-			scene.render(g);
-			g.transformation = Matrix3.identity();
+			Scene.the.render(g);
+			g.transformation = FastMatrix3.identity();
 			g.color = Color.Black;
 			for (door in Level.the.doors) {
 				if (!door.opened && door.health > 0) {
 					if (door.x < Player.current().x) {
-						var doorXscreen = door.x - scene.screenOffsetX; 
+						var doorXscreen = door.x - Scene.the.screenOffsetX; 
 						if (doorXscreen > 0 && doorXscreen < width) {
 							g.fillRect(0, 0, doorXscreen, height);
 						}
 					} else {
-						var doorXscreen = door.x + 0.5 * door.width - scene.screenOffsetX; 
+						var doorXscreen = door.x + 0.5 * door.width - Scene.the.screenOffsetX; 
 						if (doorXscreen > 0 && doorXscreen < width) {
 							g.fillRect(doorXscreen, 0, width - doorXscreen, height);
 						}
@@ -378,25 +376,25 @@ class TenUp4 extends Game {
 			// TODO: block fahrstuhl
 			if (Player.current() != null) drawPlayerInfo(g);
 		case StartScreen:
-			scene.render(g);
+			Scene.the.render(g);
 			g.font = font;
 			g.color = Color.Magenta;
-			g.pushTransformation(g.transformation.multmat(Matrix3.scale(3, 3)));
-			g.drawString("UNITY", 180 + 10 * Math.cos(0.3 * Sys.getTime()), 140 + 10 * Math.sin(0.6 * Sys.getTime()));
+			g.pushTransformation(g.transformation.multmat(FastMatrix3.scale(3, 3)));
+			g.drawString("UNITY", 180 + 10 * Math.cos(0.3 * System.time), 140 + 10 * Math.sin(0.6 * System.time));
 			g.popTransformation();
-			var b = Math.round(100 + 125 * Math.pow(Math.sin(0.5 * Sys.getTime()),2));
+			var b = Math.round(100 + 125 * Math.pow(Math.sin(0.5 * System.time),2));
 			g.color = Color.fromBytes(b, b, b);
 			var str = Localization.getText(Keys_text.CLICK_TO_START);
-			g.drawString(str, 0.5 * (width - font.stringWidth(str)), 650);
+			g.drawString(str, 0.5 * (width - font.width(fontSize, str)), 650);
 		case Loading:
-			scene.render(g);
+			Scene.the.render(g);
 		}
 		if (renderOverlay) {
 			g.color = overlayColor;
 			g.fillRect(0, 0, width, height);
 		}
 		
-		g.transformation = Matrix3.identity();
+		g.transformation = FastMatrix3.identity();
 		for (box in BlaBox.boxes) {
 			g.color = Color.White;
 			box.render(g);
@@ -404,7 +402,7 @@ class TenUp4 extends Game {
 		g.end();
 		
 		frame.g2.begin();
-		Scaler.scale(backbuffer, frame, kha.Sys.screenRotation);
+		Scaler.scale(backbuffer, frame, System.screenRotation);
 		frame.g2.end();
 	}
 	
@@ -416,9 +414,10 @@ class TenUp4 extends Game {
 		var x = 30;
 		var y = height - 85;
 		g.color = Color.fromBytes(40, 40, 40);
-		g.fillRect(x-10, y-30, TenUp4.the.width - 2 * (x-10), 90);
+		g.fillRect(x-10, y-30, TenUp4.width - 2 * (x-10), 90);
 		g.color = Color.White;
-		g.font = Loader.the.loadFont("Liberation Sans", FontStyle.Default, 20);
+		g.font = Assets.fonts.LiberationSans_Regular;
+		g.fontSize = 20;
 		var lm1 = "L. Mouse, SPACE:";
 		var rm1 = "R. Mouse, CTRL:";
 		var u1 = "E, SCHIFT:";
@@ -426,16 +425,16 @@ class TenUp4 extends Game {
 		var lm2 = Player.current().leftButton();
 		var rm2 = Player.current().rightButton();
 		var ty : Float = y - 15;
-		var w1 = g.font.stringWidth(lm1);
-		var w2 = g.font.stringWidth(rm1);
-		var w3 = g.font.stringWidth(u1);
+		var w1 = g.font.width(g.fontSize, lm1);
+		var w2 = g.font.width(g.fontSize, rm1);
+		var w3 = g.font.width(g.fontSize, u1);
 		var wm = Math.max(w1, Math.max(w2, w3));
 		g.drawString(lm1, 600 + wm - w1, ty);
 		g.drawString(lm2, 600 + wm + 5, ty);
-		ty += g.font.getHeight() + 1;
+		ty += g.font.height(g.fontSize) + 1;
 		g.drawString(rm1, 600 + wm - w2, ty);
 		g.drawString(rm2, 600 + wm + 5, ty);
-		ty += g.font.getHeight() + 1;
+		ty += g.font.height(g.fontSize) + 1;
 		g.drawString(u1, 600 + wm - w3, ty);
 		g.drawString(u2, 600 + wm + 5, ty);
 		
@@ -477,25 +476,25 @@ class TenUp4 extends Game {
 	function buttonListener(button: Int, value: Float): Void {
 		switch (button) {
 			case 0, 1, 2, 3:
-				if (value > 0.5) keydown(Key.UP, null);
-				else keyup(Key.UP, null);
+				if (value > 0.5) keydown(KeyCode.Up);
+				else keyup(KeyCode.Up);
 			case 14:
 				if (value > 0.5) {
-					keydown(Key.LEFT, null);
-					keyup(Key.RIGHT, null);
+					keydown(KeyCode.Left);
+					keyup(KeyCode.Right);
 				}
 				else {
-					keydown(Key.LEFT, null);
-					keydown(Key.RIGHT, null);
+					keydown(KeyCode.Left);
+					keydown(KeyCode.Right);
 				}
 			case 15:
 				if (value > 0.5) {
-					keyup(Key.LEFT, null);
-					keydown(Key.RIGHT, null);
+					keyup(KeyCode.Left);
+					keydown(KeyCode.Right);
 				}
 				else {
-					keydown(Key.LEFT, null);
-					keydown(Key.RIGHT, null);
+					keydown(KeyCode.Left);
+					keydown(KeyCode.Right);
 				}
 // TODO: 
 	/*
@@ -511,78 +510,57 @@ class TenUp4 extends Game {
 		}
 	}
 	
-	function keydown(key: Key, char: String) : Void {
+	function keydown(key: KeyCode) : Void {
 		if (mode == Mode.Game) {
 			if (Player.current() == null) return;
 			switch (key) {
-			case Key.CHAR:
-				switch(char) {
-				case 'a', 'A':
-					keydown(Key.LEFT, null);
-				case 'd', 'D':
-					keydown(Key.RIGHT, null);
-				case 'w', 'W':
-					keydown(Key.UP, null);
-				case 's', 'S':
-					keydown(Key.DOWN, null);
-				case ' ':
-				Player.current().prepareSpecialAbilityA();
-				default:
-				}
-			case Key.LEFT:
+			case Left, A:
 				Player.current().left = true;
-			case Key.RIGHT:
+			case Right, D:
 				Player.current().right = true;
-			case Key.UP:
+			case Up, W:
 				Player.current().setUp();
-			case Key.SHIFT:
+			case Space:
+				Player.current().prepareSpecialAbilityA();
+			case Shift:
 				Player.current().prepareSpecialAbilityB();
 			default:
 			}
 		}
 	}
 	
-	function keyup(key : Key, char : String) : Void {
+	function keyup(key : KeyCode) : Void {
 		switch (mode) {
 			case Game:
 				if (Player.current() == null) return;
 				switch (key) {
-				case Key.ESC:
+				case Escape:
 					Dialogues.escMenu();
-				case Key.ENTER:
+				case Return:
 					mode = BlaBlaBla;
 					playerWantsToTalk.isInput = true;
-				case Key.CHAR:
-					switch (char) {
-					case 'a', 'A':
-						keyup(Key.LEFT, null);
-					case 'd', 'D':
-						keyup(Key.RIGHT, null);
-					case 'w', 'W':
-						keyup(Key.UP, null);
-					case 'c', 'C':
-						mode = BlaBlaBla;
-						playerWantsToTalk.isInput = true;
-					case ' ':
-						Player.current().useSpecialAbilityA();
-					case 'e', 'E':
-						Player.current().use();
-					}
-				case Key.LEFT:
+				case Left, A:
 					Player.current().left = false;
-				case Key.RIGHT:
+				case Right, D:
 					Player.current().right = false;
-				case Key.UP:
+				case Up, W:
 					Player.current().up = false;
-				case Key.SHIFT:
+				case Space:
+					Player.current().useSpecialAbilityA();
+				case Shift:
 					Player.current().useSpecialAbilityB();
-				case Key.CTRL:
+				case Control:
+					Player.current().use();
+				case C:
+					mode = BlaBlaBla;
+					playerWantsToTalk.isInput = true;
+				case E:
 					Player.current().use();
 				default:
 				}
 			case StartScreen:
 				switch (key) {
-				case Key.ESC:
+				case Escape:
 					Dialogues.escMenu();
 				default:
 					dlg.set([new Action(null, ActionType.FADE_TO_BLACK), new StartDialogue(enterLevel.bind(1))]);
@@ -590,28 +568,34 @@ class TenUp4 extends Game {
 			case BlaBlaBla:
 				if (Player.current() == null) return;
 				switch (key) {
-				case Key.ESC:
+				case Escape:
 					playerChatStr = "";
 					playerWantsToTalk.isInput = false;
 					mode = Game;
-				case Key.BACKSPACE:
+				case Backspace:
 					playerChatStr = playerChatStr.substr(0, -1);
-				case Key.ENTER:
+				case Return:
 					Player.current().dlg.insert([new Bla(playerChatStr,Player.current())]);
 					playerChatStr = "";
 					playerWantsToTalk.isInput = false;
 					mode = Game;
-				case Key.CHAR:
-					playerChatStr += char;
 				default:
 				}
 				playerWantsToTalk.setText(playerChatStr, 350, 70);
 			default:
 				switch (key) {
-				case Key.ESC:
+				case Escape:
 					Dialogues.escMenu();
 				default:
 				}
+		}
+	}
+
+	function keypress(char: String) {
+		switch (mode) {
+			case BlaBlaBla:
+				playerChatStr += char;
+			default:
 		}
 	}
 	
@@ -662,7 +646,7 @@ class TenUp4 extends Game {
 		}
 	}
 	
-	function mousemove(x: Int, y: Int): Void {
+	function mousemove(x: Int, y: Int, mx: Int, my: Int): Void {
 		screenMouseX = x;
 		screenMouseY = y;
 		updateMouse();

@@ -1,11 +1,11 @@
 package projectiles;
 
 import haxe.EnumFlags.EnumFlags;
-import kha.Direction;
+import kha2d.Direction;
 import kha.Image;
 import kha.math.Vector2;
-import kha.Scene;
-import kha.Sprite;
+import kha2d.Scene;
+import kha2d.Sprite;
 
 enum PiercingMode {
 	WORLD;

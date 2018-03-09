@@ -1,7 +1,7 @@
 package dialogue;
 
 import Dialogue.DialogueItem;
-import kha.Sprite;
+import kha2d.Sprite;
 
 class Bla implements DialogueItem {
 	var text : String;

@@ -1,9 +1,10 @@
 package;
 
-import kha.Animation;
-import kha.Rectangle;
-import kha.Scene;
-import kha.Sprite;
+import kha.Assets;
+import kha2d.Animation;
+import kha2d.Rectangle;
+import kha2d.Scene;
+import kha2d.Sprite;
 import localization.Keys_text;
 import projectiles.FistOfDoom;
 
@@ -16,7 +17,7 @@ class PlayerBullie extends Player {
 	
 	public function new(x: Float, y: Float) {
 		super(1, x, y - 8, "rowdy", Std.int(410 / 10) * 2, Std.int(455 / 7) * 2, 100);
-		mini = kha.Loader.the.getImage("rowdymini");
+		mini = Assets.images.rowdymini;
 		the = this;
 		_health = 100;
 		baseSpeed = 3.0;

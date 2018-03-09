@@ -5,7 +5,7 @@ import haxe.xml.Parser;
 
 #if !macro
 
-import kha.Loader;
+import kha.Assets;
 
 #end
 
@@ -19,7 +19,7 @@ class Localization
 	
 	static public function init(initFilename : String, startingLanguage = "en") {
 		availableLanguages = new Map();
-		var xml = Parser.parse(Loader.the.getBlob(initFilename).toString());
+		var xml = Parser.parse(Assets.blobs.get(initFilename).toString());
 		var languages = xml.firstElement();
 		if (languages.nodeName.toLowerCase() == "languages") {
 			for (language in languages.elements()) {
@@ -43,7 +43,7 @@ class Localization
 			texts = new Map();
 		}
 		
-		var xml = Parser.parse(Loader.the.getBlob(filename).toString());
+		var xml = Parser.parse(Assets.blobs.get(filename + "_xml").toString());
 		for (item in xml.elements()) {
 			var key = item.nodeName;
 			if (key == "DefaultLanguage") {
@@ -74,7 +74,7 @@ class Localization
 #end
 
 	macro static public inline function buildKeys(file: String, assetName: String) : haxe.macro.Expr {
-		trace ('Building keys for "$file"');
+		// trace ('Building keys for "$file"');
 		var f = haxe.macro.Context.getPosInfos(haxe.macro.Context.currentPos()).file;
 		var dir = Path.directory(f) + "/";
 		var name = 'Keys_$assetName';

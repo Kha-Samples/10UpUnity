@@ -1,19 +1,19 @@
 package;
 
-import kha.Animation;
+import kha.Assets;
+import kha.audio1.Audio;
+import kha2d.Animation;
 import kha.Color;
-import kha.Direction;
+import kha2d.Direction;
 import kha.graphics2.Graphics;
 import kha.Image;
-import kha.Loader;
-import kha.math.Matrix3;
+import kha.math.FastMatrix3;
 import kha.math.Vector2;
-import kha.Music;
-import kha.Rectangle;
+import kha2d.Rectangle;
 import kha.Rotation;
-import kha.Scene;
+import kha2d.Scene;
 import kha.Sound;
-import kha.Sprite;
+import kha2d.Sprite;
 
 class Player extends DestructibleSprite {
 	public var left : Bool;
@@ -47,7 +47,7 @@ class Player extends DestructibleSprite {
 	var muzzlePoint : Vector2;
 	
 	public function new(id: Int, x: Float, y: Float, image: String, width: Int, height: Int, maxHealth: Int = 50) {
-		super(maxHealth, Loader.the.getImage(image), width, height, 1);
+		super(maxHealth, Assets.images.get(image), width, height, 1);
 		this.id = id;
 		this.x = x;
 		this.y = y;
@@ -68,8 +68,8 @@ class Player extends DestructibleSprite {
 		jumpcount = 0;
 		crosshair = new Vector2(1, 0);
 		isRepairable = true;
-		hitSound = Loader.the.getSound("hit");
-		zzzzz = Loader.the.getImage("zzzzz");
+		hitSound = Assets.sounds.hit;
+		zzzzz = Assets.images.zzzzz;
 	}
 	
 	public static inline function current(): Player {
@@ -255,17 +255,17 @@ class Player extends DestructibleSprite {
 		if ( value <= 0 ) {
 			if ( value < _health ) {
 				if (_health - value > 1) {
-					hitSound.play();
+					Audio.play(hitSound);
 				}
-				for (i in 0...Math.ceil(0.3 * (_health - value))) kha.Scene.the.addProjectile(new Blood(x + 20, y + 20));
+				for (i in 0...Math.ceil(0.3 * (_health - value))) kha2d.Scene.the.addProjectile(new Blood(x + 20, y + 20));
 			}
 			if (!killed) {
 				sleep();
 			}
 		} else if ( value < _health ) {
-			for (i in 0...Math.ceil(0.3 * (_health - value))) kha.Scene.the.addProjectile(new Blood(x + 20, y + 20));
+			for (i in 0...Math.ceil(0.3 * (_health - value))) kha2d.Scene.the.addProjectile(new Blood(x + 20, y + 20));
 				if (_health - value > 1) {
-					hitSound.play();
+					Audio.play(hitSound);
 				}
 		} else if ( value > _health && _health <= 0 ) {
 			if (killed) {
@@ -313,7 +313,7 @@ class Player extends DestructibleSprite {
 	override public function render(g: Graphics): Void {
 		if (isSleeping()) {
 			g.color = Color.White;
-			g.pushTransformation(g.transformation * Matrix3.translation(x + originX, y + originY) * Matrix3.rotation(angle) * Matrix3.translation(-x - originX, -y - originY));
+			g.pushTransformation(g.transformation.multmat(FastMatrix3.translation(x + originX, y + originY)).multmat(FastMatrix3.rotation(angle)).multmat(FastMatrix3.translation(-x - originX, -y - originY)));
 			g.drawScaledSubImage(image, 0, 0, width, height, x + collider.y * scaleY, y - collider.x * scaleX, width, height);
 		#if debug
 			g.color = Color.Red;

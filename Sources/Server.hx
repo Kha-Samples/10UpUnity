@@ -49,7 +49,6 @@ class Server {
 					else if (data.id == 1) {
 						Dialogues.startAsBully();
 					}
-					kha.Configuration.setScreen(TenUp4.the);
 					TenUp4.the.mode = Game;
 				case 'updatePerson':
 					if (data.id == Player.current().id) {
@@ -149,7 +148,7 @@ class Server {
 		#if js
 		socket.send(Json.stringify( { command: 'useElevator', id: id, destination: destinationLevel, player: Player.current().id } ));
 		#end
-		kha.Scene.the.removeHero(Player.current());
+		kha2d.Scene.the.removeHero(Player.current());
 		Level.the.elevatorDoor.opened = false;
 	}
 	

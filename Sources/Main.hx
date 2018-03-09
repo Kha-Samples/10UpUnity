@@ -1,11 +1,7 @@
 package;
 
-import haxe.Json;
-import kha.Starter;
-
 class Main {
 	public static function main() {
-		var starter = new Starter();
-		starter.start(new TenUp4());
+		new TenUp4();
 	}
 }

@@ -2,10 +2,10 @@ package;
 
 import dialogue.BlaWithChoices;
 import dialogue.StartDialogue;
-import kha.Animation;
-import kha.Loader;
-import kha.Scene;
-import kha.Sprite;
+import kha.Assets;
+import kha2d.Animation;
+import kha2d.Scene;
+import kha2d.Sprite;
 import localization.Keys_text;
 
 class ElevatorDoor extends Sprite {
@@ -15,7 +15,7 @@ class ElevatorDoor extends Sprite {
 	private var id: Int;
 	
 	public function new(id: Int, x: Int, y: Int) {
-		super(Loader.the.getImage("elevator"), 78 * 2, 64 * 2, 0);
+		super(Assets.images.elevator, 78 * 2, 64 * 2, 0);
 		this.id = id;
 		this.x = x;
 		this.y = y;

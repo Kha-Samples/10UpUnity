@@ -1,7 +1,8 @@
 package;
 
-import kha.Animation;
-import kha.Rectangle;
+import kha.Assets;
+import kha2d.Animation;
+import kha2d.Rectangle;
 import kha.Scheduler;
 import localization.Keys_text;
 
@@ -18,7 +19,7 @@ class PlayerBlondie extends Player {
 	
 	public function new(x: Float, y: Float) {
 		super(0, x, y - 8, "mechanic", Std.int(410 / 10) * 2, Std.int(455 / 7) * 2);
-		mini = kha.Loader.the.getImage("mechanicmini");
+		mini = Assets.images.mechanicmini;
 		the = this;
 		repairAmountPerSec = 50;
 		collider = new Rectangle(20, 30, 41 * 2 - 40, (65 - 1) * 2 - 30);
@@ -97,7 +98,7 @@ class PlayerBlondie extends Player {
 				}
 			}
 			if ( lastDanceTime < 0 ) {
-				lastDanceTime += Scheduler.deltaTime;
+				lastDanceTime +=  1 / 60; // Scheduler.deltaTime;
 				if ( lastDanceTime >= 0 ) {
 					isDancing = false;
 				}

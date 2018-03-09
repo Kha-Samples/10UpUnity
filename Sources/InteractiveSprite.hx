@@ -1,14 +1,14 @@
 package ;
 
-import kha.Animation;
-import kha.Direction;
+import kha2d.Animation;
+import kha2d.Direction;
 import kha.graphics2.Graphics;
 import kha.Image;
 import kha.math.Vector2;
-import kha.Rectangle;
+import kha2d.Rectangle;
 import kha.Rotation;
-import kha.Scene;
-import kha.Sprite;
+import kha2d.Scene;
+import kha2d.Sprite;
 
 class InteractiveSprite extends Sprite {
 	public var isUseable(default, null) : Bool = false;

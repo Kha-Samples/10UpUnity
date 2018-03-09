@@ -2,11 +2,11 @@ package;
 
 import dialogue.BlaWithChoices;
 import dialogue.StartDialogue;
-import kha.Animation;
-import kha.Direction;
-import kha.Loader;
-import kha.Scene;
-import kha.Sprite;
+import kha.Assets;
+import kha2d.Animation;
+import kha2d.Direction;
+import kha2d.Scene;
+import kha2d.Sprite;
 import localization.Keys_text;
 
 class ElevatorButton extends InteractiveSprite {
@@ -17,7 +17,7 @@ class ElevatorButton extends InteractiveSprite {
 	private var id: Int;
 	
 	public function new(id: Int, x: Int, y: Int) {
-		super(Loader.the.getImage("elevatorbuttons"), 23 * 2, 15 * 2, 0);
+		super(Assets.images.elevatorbuttons, 23 * 2, 15 * 2, 0);
 		this.id = id;
 		this.x = x;
 		this.y = y;
